@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap');
+
+/* ── Section ── */
+.homeabout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding: 100px 7%;
+  background: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Image Column ── */
+.homeabout__image-col {
+  position: relative;
+}
+
+.homeabout__image-wrapper {
+  position: relative;
+  border-radius: 16px;
+  overflow: visible;
+}
+
+.homeabout__image-wrapper img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+
+/* Decorative border behind image */
+.homeabout__image-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #2d1fa3;
+  border-radius: 16px;
+  z-index: -1;
+}
+
+/* Floating badge */
+.homeabout__badge {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 96px;
+  height: 96px;
+  background: #2d1fa3;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(45, 31, 163, 0.3);
+}
+
+.badge-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.badge-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── Text Column ── */
+.homeabout__text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.homeabout__eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #2d1fa3;
+  margin: 0 0 14px;
+}
+
+.homeabout__heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 700;
+  color: #1a1040;
+  line-height: 1.15;
+  margin: 0 0 24px;
+}
+
+.homeabout__heading span {
+  color: #2d1fa3;
+}
+
+.homeabout__body {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: #4a4660;
+  margin: 0 0 16px;
+}
+
+/* ── Stats ── */
+.homeabout__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 32px 0 36px;
+  padding: 24px 0;
+  border-top: 1px solid #ede9f8;
+  border-bottom: 1px solid #ede9f8;
+}
+
+.homeabout__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2d1fa3;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #7c7895;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* ── Buttons ── */
+.homeabout__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.homeabout__btn {
+  display: inline-block;
+  padding: 13px 28px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.homeabout__btn.primary {
+  background: #2d1fa3;
+  color: #ffffff;
+  border: 2px solid #2d1fa3;
+}
+
+.homeabout__btn.primary:hover {
+  background: #1a1040;
+  border-color: #1a1040;
+}
+
+.homeabout__btn.secondary {
+  background: transparent;
+  color: #2d1fa3;
+  border: 2px solid #2d1fa3;
+}
+
+.homeabout__btn.secondary:hover {
+  background: #f0eeff;
+}
+
+/* ── Tablet ── */
+@media (max-width: 1024px) {
+  .homeabout {
+    gap: 40px;
+    padding: 80px 5%;
+  }
+
+  .homeabout__stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .homeabout {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 64px 5%;
+  }
+
+  .homeabout__image-wrapper img {
+    height: 320px;
+  }
+
+  .homeabout__image-wrapper::before {
+    top: 14px;
+    left: -14px;
+  }
+
+  .homeabout__badge {
+    width: 80px;
+    height: 80px;
+    bottom: -14px;
+    right: -14px;
+  }
+
+  .badge-number {
+    font-size: 17px;
+  }
+
+  .homeabout__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .homeabout__actions {
+    flex-direction: column;
+  }
+
+  .homeabout__btn {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeabout__stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+}

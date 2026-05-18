@@ -1,0 +1,378 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap');
+
+/* ── Section ── */
+.conf {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 56px;
+  align-items: start;
+  padding: 100px 7%;
+  background: #0d0826;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* decorative background glow */
+.conf::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(45, 31, 163, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.conf::after {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  left: 10%;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(196, 181, 253, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Left — main info ── */
+.conf__eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #c4b5fd;
+  margin: 0 0 20px;
+}
+
+.conf__edition {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0 0 8px;
+  line-height: 1;
+}
+
+.conf__number {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(72px, 10vw, 120px);
+  font-weight: 900;
+  color: #c4b5fd;
+  line-height: 1;
+}
+
+.conf__sup {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  color: #c4b5fd;
+  margin-top: 14px;
+}
+
+.conf__national {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 700;
+  color: #ffffff;
+  align-self: flex-end;
+  margin-bottom: 12px;
+  margin-left: 8px;
+  line-height: 1.2;
+}
+
+.conf__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 700;
+  color: #f5c542;
+  margin: 0 0 32px;
+  font-style: italic;
+}
+
+/* Theme box */
+.conf__theme-box {
+  border-left: 3px solid #2d1fa3;
+  padding: 16px 20px;
+  background: rgba(45, 31, 163, 0.15);
+  border-radius: 0 10px 10px 0;
+  margin: 0 0 32px;
+}
+
+.conf__theme-label {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c4b5fd;
+  background: rgba(196, 181, 253, 0.15);
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+}
+
+.conf__theme-text {
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* Meta */
+.conf__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 0 40px;
+}
+
+.conf__meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.conf__meta-icon {
+  font-size: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.conf__meta-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 3px;
+}
+
+.conf__meta-value {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.45;
+}
+
+/* Buttons */
+.conf__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.conf__btn {
+  display: inline-block;
+  padding: 13px 28px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.conf__btn.primary {
+  background: #2d1fa3;
+  color: #ffffff;
+  border: 2px solid #2d1fa3;
+}
+
+.conf__btn.primary:hover {
+  background: #f5c542;
+  border-color: #f5c542;
+  color: #0d0826;
+}
+
+.conf__btn.secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.conf__btn.secondary:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.conf__btn.full {
+  width: 100%;
+  display: block;
+}
+
+/* ── Right — Sidebar ── */
+.conf__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Countdown */
+.conf__countdown {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 28px 24px;
+}
+
+.conf__countdown-title {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.conf__countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.conf__countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(45, 31, 163, 0.3);
+  border: 1px solid rgba(196, 181, 253, 0.2);
+  border-radius: 10px;
+  padding: 14px 8px;
+}
+
+.conf__countdown-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.conf__countdown-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Promo card */
+.conf__promo {
+  background: linear-gradient(135deg, #1a1040 0%, #2d1fa3 100%);
+  border: 1px solid rgba(196, 181, 253, 0.2);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.conf__promo-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f5c542;
+  background: rgba(245, 197, 66, 0.12);
+  border: 1px solid rgba(245, 197, 66, 0.3);
+  padding: 5px 14px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+
+.conf__promo-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.conf__promo-headline strong {
+  color: #f5c542;
+  font-size: 40px;
+}
+
+.conf__promo-sub {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.conf__promo-sub strong {
+  color: #f5c542;
+}
+
+.conf__promo-cta-text {
+  font-size: 13px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 20px;
+}
+
+/* ── Tablet ── */
+@media (max-width: 1100px) {
+  .conf {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 80px 5%;
+  }
+
+  .conf__sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .conf {
+    padding: 64px 5%;
+    gap: 40px;
+  }
+
+  .conf__sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .conf__countdown-value {
+    font-size: 26px;
+  }
+
+  .conf__actions {
+    flex-direction: column;
+  }
+
+  .conf__btn {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .conf__number {
+    font-size: 64px;
+  }
+
+  .conf__countdown-grid {
+    gap: 6px;
+  }
+
+  .conf__countdown-unit {
+    padding: 10px 4px;
+  }
+
+  .conf__countdown-value {
+    font-size: 22px;
+  }
+}
