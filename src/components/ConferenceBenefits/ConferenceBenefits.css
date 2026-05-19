@@ -1,0 +1,246 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap');
+
+/* ── Section ── */
+.benefits {
+  padding: 100px 7%;
+  background: #f7f5ff;
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden; /* prevents horizontal scroll from off-screen cards */
+}
+
+/* ── Header ── */
+.benefits__header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 64px;
+
+  /* initial hidden state */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.benefits__header.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.benefits__eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #2d1fa3;
+  margin: 0 0 14px;
+}
+
+.benefits__heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  color: #1a1040;
+  line-height: 1.15;
+  margin: 0 0 18px;
+}
+
+.benefits__heading span {
+  color: #2d1fa3;
+}
+
+.benefits__subtext {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #5a5475;
+  margin: 0;
+}
+
+/* ── Grid ── */
+.benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 72px;
+}
+
+/* ── Card base — hidden before animation ── */
+.benefits__card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  border: 1px solid #ede9f8;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+  opacity: 0;
+}
+
+/* Cards slide in from left */
+.benefits__card.from-left {
+  transform: translateX(-80px);
+}
+
+/* Cards slide in from right */
+.benefits__card.from-right {
+  transform: translateX(80px);
+}
+
+/* When IntersectionObserver fires .animate-in */
+.benefits__card.animate-in {
+  opacity: 1;
+  transform: translateX(0) !important;
+}
+
+/* Hover lift — only after card has appeared */
+.benefits__card.animate-in:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 16px 40px rgba(45, 31, 163, 0.1);
+  border-color: #c4b5fd;
+}
+
+/* ── Card internals ── */
+.benefits__card-icon {
+  font-size: 36px;
+  margin-bottom: 18px;
+  display: block;
+  line-height: 1;
+}
+
+.benefits__card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1040;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.benefits__card-desc {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #5a5475;
+  margin: 0;
+}
+
+/* ── Bottom CTA ── */
+.benefits__cta-wrap {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.benefits__cta-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #1a1040;
+  margin: 0;
+}
+
+.benefits__cta-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Buttons ── */
+.benefits__btn {
+  display: inline-block;
+  padding: 13px 30px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.benefits__btn.primary {
+  background: #2d1fa3;
+  color: #ffffff;
+  border: 2px solid #2d1fa3;
+}
+
+.benefits__btn.primary:hover {
+  background: #1a1040;
+  border-color: #1a1040;
+}
+
+.benefits__btn.secondary {
+  background: transparent;
+  color: #2d1fa3;
+  border: 2px solid #2d1fa3;
+}
+
+.benefits__btn.secondary:hover {
+  background: #f0eeff;
+}
+
+/* ── Tablet — 2 columns, adjust direction ── */
+@media (max-width: 1100px) {
+  .benefits__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* In 2-col layout: col 0 = left, col 1 = right */
+  .benefits__card:nth-child(odd).from-left,
+  .benefits__card:nth-child(odd).from-right {
+    transform: translateX(-80px);
+  }
+
+  .benefits__card:nth-child(even).from-left,
+  .benefits__card:nth-child(even).from-right {
+    transform: translateX(80px);
+  }
+}
+
+/* ── Mobile — single column, all from bottom ── */
+@media (max-width: 768px) {
+  .benefits {
+    padding: 64px 5%;
+  }
+
+  .benefits__header {
+    margin-bottom: 40px;
+  }
+
+  .benefits__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  /* On mobile, slide up from bottom instead */
+  .benefits__card.from-left,
+  .benefits__card.from-right {
+    transform: translateY(50px);
+  }
+
+  .benefits__card.animate-in {
+    transform: translateY(0) !important;
+  }
+
+  .benefits__card.animate-in:hover {
+    transform: translateY(-4px) !important;
+  }
+
+  .benefits__card {
+    padding: 24px 20px;
+  }
+
+  .benefits__cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .benefits__btn {
+    text-align: center;
+    width: 100%;
+  }
+}

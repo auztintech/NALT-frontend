@@ -3,6 +3,7 @@ import Header from "../../components/Header/Header";
 import Hero from "../../components/Hero/Hero";
 import AboutNalt from "../../components/AboutNalt/AboutNalt";
 import ConferenceHighlight from "../../components/ConferenceHighlight/ConferenceHighlight";
+import ConferenceBenefits from "../../components/ConferenceBenefits/ConferenceBenefits";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <Hero />
       <AboutNalt />
       <ConferenceHighlight />
+      <ConferenceBenefits />
     </div>
   );
 };
