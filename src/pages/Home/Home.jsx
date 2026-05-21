@@ -4,6 +4,7 @@ import Hero from "../../components/Hero/Hero";
 import AboutNalt from "../../components/AboutNalt/AboutNalt";
 import ConferenceHighlight from "../../components/ConferenceHighlight/ConferenceHighlight";
 import ConferenceBenefits from "../../components/ConferenceBenefits/ConferenceBenefits";
+import Leadership from "../../components/Leadership/Leadership";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <AboutNalt />
       <ConferenceHighlight />
       <ConferenceBenefits />
+      <Leadership />
     </div>
   );
 };
