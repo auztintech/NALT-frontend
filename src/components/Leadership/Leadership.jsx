@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./Leadership.css";
 import { Link } from "react-router-dom";
-import profAkintayo from "../../assets/images/profjohn2.jpg";
+import profAkintayo from "../../assets/images/profjohn22.jpg";
 import DrEsa from "../../assets/images/dresa.png";
 import DrNenna from "../../assets/images/drnnena.jpg";
 import DrMoha from "../../assets/images/drmuhammed.jpg";
