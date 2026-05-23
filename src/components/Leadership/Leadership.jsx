@@ -16,10 +16,7 @@ const leaders = [
     institution: "University of Ibadan",
     description:
       "Professor Akintayo serves as the President of the Nigerian Association of Law Teachers. A distinguished legal scholar at the University of Ibadan, he brings decades of academic leadership and a deep commitment to advancing legal education across Nigeria.",
-    bullets: [
-      "Head of the NALT National Executive Committee",
-      "Champion of legal education reform in Nigeria",
-    ],
+
     image: profAkintayo,
   },
   {
@@ -29,10 +26,7 @@ const leaders = [
     institution: "Nigerian Law School, Abuja",
     description:
       "Dr. Onoja coordinates the association's administrative functions from the Nigerian Law School, Abuja. He is known for his meticulous approach to governance and his passion for legal professional development.",
-    bullets: [
-      "Oversees all secretariat and administrative operations",
-      "Liaison between NALT and partner institutions",
-    ],
+
     image: DrEsa,
   },
   {
@@ -42,10 +36,7 @@ const leaders = [
     institution: "Nigerian Institute of Advanced Legal Studies",
     description:
       "Dr. Eboh oversees NALT's financial affairs with precision and integrity. Based at the Nigerian Institute of Advanced Legal Studies, she brings rigorous financial acumen and a strong record of academic contribution.",
-    bullets: [
-      "Manages NALT's national financial accounts",
-      "Ensures fiscal transparency across all programmes",
-    ],
+
     image: DrNenna,
   },
   {
@@ -55,10 +46,7 @@ const leaders = [
     institution: "Nigerian Police Academy, Wudil",
     description:
       "Dr. Badr supports NALT's financial management from the Nigerian Police Academy, Wudil. His work reflects a strong dedication to transparency and accountability in legal education governance.",
-    bullets: [
-      "Records and manages all financial transactions",
-      "Supports budgeting and financial reporting",
-    ],
+
     image: DrMoha,
   },
   {
@@ -68,10 +56,7 @@ const leaders = [
     institution: "University of Nigeria, Nsukka",
     description:
       "Dr. Ukam assists in managing NALT's secretariat and operations, drawing on his academic grounding at the University of Nigeria, Nsukka. He is a committed advocate for collegiate engagement and legal scholarship.",
-    bullets: [
-      "Assists in secretariat coordination and correspondence",
-      "Supports member engagement and communication",
-    ],
+
     image: Placeholder,
   },
   {
@@ -81,10 +66,7 @@ const leaders = [
     institution: "Fountain University, Osogbo",
     description:
       "Mr. Alao manages NALT's communications and public profile as Publicity Secretary. A faculty member at Fountain University, Osogbo, he brings energy and creative vision to promoting the association's work nationwide.",
-    bullets: [
-      "Manages NALT's public communications and media",
-      "Drives awareness for conferences and programmes",
-    ],
+
     image: DrAlao,
   },
 ];
@@ -122,14 +104,6 @@ const Leadership = () => {
               <p className="leadership__institution">{leader.institution}</p>
               <div className="leadership__divider" />
               <p className="leadership__description">{leader.description}</p>
-              <ul className="leadership__bullets">
-                {leader.bullets.map((b, i) => (
-                  <li key={i}>
-                    <span className="leadership__bullet-dot" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
             </div>
 
             {/* Right — photo */}
