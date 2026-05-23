@@ -8,88 +8,92 @@ import DrMoha from "../../assets/images/drmuhammed.jpg";
 import DrAlao from "../../assets/images/Alao.jpg";
 import Placeholder from "../../assets/images/placeholder.avif";
 
-
-
 const leaders = [
   {
+    number: "01",
     name: "Prof. Oluwole Akintayo",
     role: "President",
     institution: "University of Ibadan",
     description:
       "Professor Akintayo serves as the President of the Nigerian Association of Law Teachers. A distinguished legal scholar at the University of Ibadan, he brings decades of academic leadership and a deep commitment to advancing legal education across Nigeria.",
+    bullets: [
+      "Head of the NALT National Executive Committee",
+      "Champion of legal education reform in Nigeria",
+    ],
     image: profAkintayo,
   },
   {
+    number: "02",
     name: "Dr. Esa Onoja",
     role: "General Secretary",
     institution: "Nigerian Law School, Abuja",
     description:
-      "Dr. Onoja serves as General Secretary of NALT, coordinating the association's administrative functions from the Nigerian Law School, Abuja. He is known for his meticulous approach to governance and his passion for legal professional development.",
+      "Dr. Onoja coordinates the association's administrative functions from the Nigerian Law School, Abuja. He is known for his meticulous approach to governance and his passion for legal professional development.",
+    bullets: [
+      "Oversees all secretariat and administrative operations",
+      "Liaison between NALT and partner institutions",
+    ],
     image: DrEsa,
   },
   {
+    number: "03",
     name: "Dr. Nnena Eboh",
     role: "Treasurer",
     institution: "Nigerian Institute of Advanced Legal Studies",
     description:
-      "Dr. Eboh oversees NALT's financial affairs with precision and integrity. Based at the Nigerian Institute of Advanced Legal Studies, she brings rigorous financial acumen and a strong record of academic contribution to her role.",
+      "Dr. Eboh oversees NALT's financial affairs with precision and integrity. Based at the Nigerian Institute of Advanced Legal Studies, she brings rigorous financial acumen and a strong record of academic contribution.",
+    bullets: [
+      "Manages NALT's national financial accounts",
+      "Ensures fiscal transparency across all programmes",
+    ],
     image: DrNenna,
   },
   {
+    number: "04",
     name: "Dr. Mohammed Bashir Badr",
     role: "Financial Secretary",
     institution: "Nigerian Police Academy, Wudil",
     description:
-      "Dr. Badr serves as Financial Secretary of NALT, supporting the association's financial management from the Nigerian Police Academy, Wudil. His work reflects a dedication to transparency and accountability in legal education governance.",
+      "Dr. Badr supports NALT's financial management from the Nigerian Police Academy, Wudil. His work reflects a strong dedication to transparency and accountability in legal education governance.",
+    bullets: [
+      "Records and manages all financial transactions",
+      "Supports budgeting and financial reporting",
+    ],
     image: DrMoha,
   },
   {
+    number: "05",
     name: "Dr. Paul Ikenna Ukam",
     role: "Assistant General Secretary",
     institution: "University of Nigeria, Nsukka",
     description:
       "Dr. Ukam assists in managing NALT's secretariat and operations, drawing on his academic grounding at the University of Nigeria, Nsukka. He is a committed advocate for collegiate engagement and legal scholarship.",
+    bullets: [
+      "Assists in secretariat coordination and correspondence",
+      "Supports member engagement and communication",
+    ],
     image: Placeholder,
   },
   {
+    number: "06",
     name: "Mr. Idris Ibrahim Alao",
     role: "Publicity Secretary",
     institution: "Fountain University, Osogbo",
     description:
       "Mr. Alao manages NALT's communications and public profile as Publicity Secretary. A faculty member at Fountain University, Osogbo, he brings energy and creative vision to promoting the association's work nationwide.",
+    bullets: [
+      "Manages NALT's public communications and media",
+      "Drives awareness for conferences and programmes",
+    ],
     image: DrAlao,
   },
 ];
 
 const Leadership = () => {
-  const headerRef = useRef(null);
-  const cardRefs = useRef([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-in");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
-    );
-
-    if (headerRef.current) observer.observe(headerRef.current);
-    cardRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section className="leadership">
       {/* Header */}
-      <div className="leadership__header" ref={headerRef}>
+      <div className="leadership__header">
         <p className="leadership__eyebrow">Our Leadership</p>
         <h2 className="leadership__heading">
           The People <span>Leading NALT</span>
@@ -100,42 +104,44 @@ const Leadership = () => {
         </p>
       </div>
 
-      {/* Leaders list */}
-      <div className="leadership__list">
+      {/* Sticky stack */}
+      <div className="leadership__stack">
         {leaders.map((leader, index) => (
           <div
+            className="leadership__card"
             key={index}
-            className={`leadership__item ${index % 2 === 0 ? "from-left" : "from-right"}`}
-            ref={(el) => (cardRefs.current[index] = el)}
-            style={{ transitionDelay: `${(index % 2) * 100}ms` }}
+            style={{ top: `calc(80px + ${index * 24}px)` }}
           >
-            {/* Photo */}
+            {/* Number */}
+            <div className="leadership__number">{leader.number}</div>
+
+            {/* Left — text */}
+            <div className="leadership__info">
+              <span className="leadership__role-badge">{leader.role}</span>
+              <h3 className="leadership__name">{leader.name}</h3>
+              <p className="leadership__institution">{leader.institution}</p>
+              <div className="leadership__divider" />
+              <p className="leadership__description">{leader.description}</p>
+              <ul className="leadership__bullets">
+                {leader.bullets.map((b, i) => (
+                  <li key={i}>
+                    <span className="leadership__bullet-dot" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right — photo */}
             <div className="leadership__photo-wrap">
               <img
                 src={leader.image}
                 alt={leader.name}
                 className="leadership__photo"
               />
-              <div className="leadership__photo-overlay" />
-            </div>
-
-            {/* Info */}
-            <div className="leadership__info">
-              <span className="leadership__role">{leader.role}</span>
-              <h3 className="leadership__name">{leader.name}</h3>
-              <p className="leadership__institution">{leader.institution}</p>
-              <div className="leadership__divider" />
-              <p className="leadership__description">{leader.description}</p>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* CTA */}
-      <div className="leadership__cta">
-        <Link to="/about" className="leadership__btn">
-          Learn More About NALT
-        </Link>
       </div>
     </section>
   );
