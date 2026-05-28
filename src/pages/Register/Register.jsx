@@ -5,7 +5,6 @@ export default function Register() {
   return (
     <div>
       <Header />
-      <h1>Conference Registration</h1>
 
       <RegisterForm />
     </div>
