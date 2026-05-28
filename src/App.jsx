@@ -6,11 +6,14 @@ import Announcements from "./pages/Announcement/Announcements";
 import Contact from "./pages/Contact/Contact";
 import About from "./pages/About/About";
 import Register from "./pages/Register/Register";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ToastContainer position="top-right" autoClose={3000} theme="colored" />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/articles" element={<Articles />} />

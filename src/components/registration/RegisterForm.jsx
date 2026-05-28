@@ -2,6 +2,7 @@ import { useState } from "react";
 import { endpoint } from "../../api/endpoints";
 import "./RegisterForm.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function RegisterForm() {
   const endpoints = endpoint();
@@ -27,17 +28,22 @@ export default function RegisterForm() {
     try {
       const response = await axios.post(
         endpoints.registration.create,
-        formData
+        formData,
       );
       console.log(response.data);
       setSuccess(true);
-      setFormData({ full_name: "", email: "", phone_number: "", institution: "" });
+      setFormData({
+        full_name: "",
+        email: "",
+        phone_number: "",
+        institution: "",
+      });
     } catch (error) {
       console.error(error.response?.data);
       if (error.response?.data?.email) {
-        alert("This email address is already registered.");
+        toast.error("This email address is already registered.");
       } else {
-        alert("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.");
       }
     }
     setLoading(false);
@@ -62,7 +68,9 @@ export default function RegisterForm() {
             <div className="register__detail-icon"></div>
             <div>
               <span className="register__detail-label">Date</span>
-              <span className="register__detail-value">18th – 22nd October, 2026</span>
+              <span className="register__detail-value">
+                18th – 22nd October, 2026
+              </span>
             </div>
           </div>
           <div className="register__detail-item">
@@ -99,7 +107,9 @@ export default function RegisterForm() {
       <div className="register__right">
         <div className="register__form-card">
           <div className="register__form-header">
-            <h2 className="register__form-title">Register for the Conference</h2>
+            <h2 className="register__form-title">
+              Register for the Conference
+            </h2>
             <p className="register__form-subtitle">
               Fill in your details below to complete your registration.
             </p>
@@ -110,8 +120,8 @@ export default function RegisterForm() {
               <div className="register__success-icon">✓</div>
               <h3>Registration Successful!</h3>
               <p>
-                Thank you for registering. You will receive a confirmation
-                email shortly.
+                Thank you for registering. You will receive a confirmation email
+                shortly.
               </p>
               <button
                 className="register__btn"
