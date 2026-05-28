@@ -5,6 +5,7 @@ import Articles from "./pages/Articles/Articles";
 import Announcements from "./pages/Announcement/Announcements";
 import Contact from "./pages/Contact/Contact";
 import About from "./pages/About/About";
+import Register from "./pages/Register/Register";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/announcements" element={<Announcements />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </>
