@@ -5,5 +5,15 @@ export const endpoint = () => {
     registration: {
       create: `${apiUrl}/register/`,
     },
+    article: {
+      list: `${apiUrl}/articles/`,
+      detail: (slug) => `${apiUrl}/articles/${slug}/`,
+    },
+    announcement: {
+      list: `${apiUrl}/announcements`,
+      detail: (slug) => `${apiUrl}/announcements/${slug}`,
+    }
   };
 };
+
+
