@@ -5,7 +5,7 @@ import naltLogo from "../../assets/images/nalt-logo.png";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
+ 
   {
     label: "Conference",
     dropdown: [
