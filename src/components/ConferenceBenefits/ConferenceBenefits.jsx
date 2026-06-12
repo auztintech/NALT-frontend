@@ -45,12 +45,6 @@ const benefits = [
     description:
       "Represent your law faculty or institution on a national stage, showcasing your contributions to legal education in Nigeria.",
   },
-  {
-    icon: "",
-    title: "CPD & Academic Growth",
-    description:
-      "Earn Continuing Professional Development credits while deepening your expertise in emerging technologies and contemporary legal issues.",
-  },
 ];
 
 // In a 4-column grid:

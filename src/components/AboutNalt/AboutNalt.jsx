@@ -1,7 +1,7 @@
 import React from "react";
 import "./AboutNalt.css";
 import { Link } from "react-router-dom";
-import naltImage from "../../assets/images/nalt.jpeg";
+import naltImage from "../../assets/images/conference.png";
 
 const stats = [
   { value: "500+", label: "Law Teachers" },

@@ -57,7 +57,7 @@ const ConferenceHighlight = () => {
             <span className="conf__meta-icon"></span>
             <div>
               <span className="conf__meta-label">Date</span>
-              <span className="conf__meta-value">18th – 22nd October, 2026</span>
+              <span className="conf__meta-value">18 – 22 October, 2026</span>
             </div>
           </div>
           <div className="conf__meta-item">
@@ -110,7 +110,7 @@ const ConferenceHighlight = () => {
             First <strong>100</strong> Registrants
           </p>
           <p className="conf__promo-sub">
-            Get a <strong>Special Price</strong>
+            Get a <strong>Special Prize</strong>
           </p>
           
         </div>

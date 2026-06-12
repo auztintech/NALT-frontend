@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Hero.css";
 import { Link } from "react-router-dom";
-import heroImage2 from "../../assets/images/nalt.jpeg";
+import heroImage2 from "../../assets/images/Faculty.jpg";
+import unibenimage from "../../assets/images/uniben.webp";
 
 const slides = [
   {
@@ -27,8 +28,7 @@ const slides = [
     subheading: "Educators Nationwide",
     description:
       "Access resources, research, and a strong network dedicated to excellence in legal education.",
-    image:
-      "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80",
+    image: unibenimage,
   },
 ];
 
@@ -119,7 +119,7 @@ const Hero = () => {
         <div className="nalt-hero__eventbar-inner">
           <span className="eventbar-label">Next Event:</span>
           <span className="eventbar-value">
-            18th - 22nd October, 2026 &nbsp;·&nbsp; Benin, Nigeria
+            18 - 22 October, 2026 &nbsp;·&nbsp; Benin, Nigeria
           </span>
           <Link to="/contact" className="eventbar-cta"></Link>
         </div>

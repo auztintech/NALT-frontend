@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css');
 
+/* ── Base Header ── */
 .nalt-header {
   height: 80px;
   background: #ffffff;
@@ -14,70 +16,146 @@
   font-family: 'DM Sans', sans-serif;
 }
 
-/* Logo */
+/* ── Logo ── */
 .nalt-logo {
   font-family: 'Playfair Display', serif;
   font-size: 22px;
   color: #1a1040;
   text-decoration: none;
   letter-spacing: -0.3px;
+  flex-shrink: 0;
 }
+.nalt-logo span { color: #2d1fa3; }
 
-.nalt-logo span {
-  color: #2d1fa3;
-}
-
-/* Nav */
+/* ── Desktop Nav ── */
 .nalt-nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   list-style: none;
-  margin: 0;
+  margin: 0 16px;
   padding: 0;
 }
-
-.nalt-nav li a {
-  display: block;
-  padding: 8px 14px;
-  font-size: 14.5px;
+.nalt-nav li{
+  position: relative
+}
+.nalt-nav li > a,
+.nalt-nav-dropdown-trigger {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
   font-weight: 700;
   color: #2e2a3e;
   text-decoration: none;
   border-radius: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
   transition: background 0.18s, color 0.18s;
+  white-space: nowrap;
 }
-
-.nalt-nav li a:hover,
-.nalt-nav li.active a {
+.nalt-nav li > a:hover,
+.nalt-nav li.active > a,
+.nalt-nav-has-dropdown.open .nalt-nav-dropdown-trigger,
+.nalt-nav-has-dropdown.active .nalt-nav-dropdown-trigger {
   background: #f0eeff;
   color: #2d1fa3;
 }
 
-/* CTA */
+/* Chevron */
+.nalt-chev {
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+.nalt-nav-has-dropdown.open .nalt-chev {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown Panel ── */
+.nalt-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background: #ffffff;
+  border: 0.5px solid #e8e4f0;
+  border-radius: 14px;
+  min-width: 240px;
+  padding: 8px;
+  z-index: 1000;
+  box-shadow: 0 8px 28px rgba(45, 31, 163, 0.09), 0 2px 8px rgba(0,0,0,0.04);
+  animation: dropIn 0.16s ease;
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nalt-dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 10px;
+  text-decoration: none;
+  border-radius: 9px;
+  transition: background 0.15s;
+}
+.nalt-dropdown-item:hover { background: #f0eeff; }
+
+
+
+
+.nalt-dropdown-text {
+  display: flex;
+  flex-direction: column;
+}
+.nalt-dropdown-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1040;
+  line-height: 1.3;
+}
+.nalt-dropdown-item:hover .nalt-dropdown-label { color: #2d1fa3; }
+.nalt-dropdown-sub {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: #888;
+  margin-top: 2px;
+}
+
+.nalt-dropdown-divider {
+  height: 0.5px;
+  background: #e8e4f0;
+  margin: 6px 0;
+}
+
+/* ── CTA Button ── */
 .nalt-cta {
   background: #2d1fa3;
   color: #ffffff;
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  padding: 10px 24px;
+  padding: 10px 22px;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   text-decoration: none;
   transition: background 0.18s, transform 0.12s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-
 .nalt-cta:hover {
   background: #1a1040;
   transform: translateY(-1px);
 }
 
-/* Hamburger (mobile) */
+/* ── Hamburger ── */
 .nalt-hamburger {
   display: none;
   flex-direction: column;
@@ -87,16 +165,16 @@
   cursor: pointer;
   padding: 4px;
 }
-
 .nalt-hamburger span {
   display: block;
   width: 24px;
   height: 2px;
   background: #1a1040;
   border-radius: 2px;
+  transition: background 0.18s;
 }
 
-/* Mobile drawer */
+/* ── Mobile Drawer ── */
 .nalt-mobile-menu {
   display: none;
   position: absolute;
@@ -105,34 +183,79 @@
   right: 0;
   background: #fff;
   border-bottom: 1px solid #e8e4f0;
-  padding: 16px 24px;
+  padding: 12px 20px 20px;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   z-index: 998;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
 }
-
-.nalt-mobile-menu a {
+.nalt-mobile-menu > a {
   display: block;
-  padding: 12px 16px;
+  padding: 11px 14px;
   font-size: 15px;
   font-weight: 500;
   color: #2e2a3e;
   text-decoration: none;
   border-radius: 8px;
 }
+.nalt-mobile-menu > a:hover,
+.nalt-mobile-menu > a.active { background: #f0eeff; color: #2d1fa3; }
 
-.nalt-mobile-menu a:hover,
-.nalt-mobile-menu a.active {
-  background: #f0eeff;
-  color: #2d1fa3;
+/* Mobile group trigger */
+.nalt-mobile-group-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2e2a3e;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nalt-mobile-group-trigger:hover,
+.nalt-mobile-group-trigger.open,
+.nalt-mobile-group-trigger.active { background: #f0eeff; color: #2d1fa3; }
+.nalt-mobile-group-trigger.open .nalt-chev { transform: rotate(180deg); }
+
+/* Mobile submenu */
+.nalt-mobile-submenu {
+  padding: 4px 0 4px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.nalt-mobile-sublink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #2e2a3e;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+.nalt-mobile-sublink i { font-size: 15px; color: #2d1fa3; }
+.nalt-mobile-sublink:hover { background: #f0eeff; color: #2d1fa3; }
+
+.nalt-cta.mobile { margin-top: 10px; text-align: center; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .nalt-header { padding: 0 28px; }
+  .nalt-nav li > a,
+  .nalt-nav-dropdown-trigger { font-size: 12.5px; padding: 7px 10px; }
 }
 
-.nalt-cta.mobile {
-  margin-top: 12px;
-  text-align: center;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
   .nalt-header { padding: 0 20px; }
   .nalt-nav { display: none; }
