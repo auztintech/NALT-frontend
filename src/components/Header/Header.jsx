@@ -5,7 +5,7 @@ import naltLogo from "../../assets/images/nalt-logo.png";
 
 const navLinks = [
   { to: "/", label: "Home" },
- 
+
   {
     label: "Conference",
     dropdown: [
@@ -111,8 +111,8 @@ const Header = () => {
   const [mobileExpanded, setMobileExpanded] = useState(null);
   const headerRef = useRef(null);
 
-  const handleDropdown = (label) =>
-    setOpenDropdown((prev) => (prev === label ? null : label));
+  // const handleDropdown = (label) =>
+  //   setOpenDropdown((prev) => (prev === label ? null : label));
 
   const closeAll = () => {
     setOpenDropdown(null);
@@ -147,15 +147,28 @@ const Header = () => {
       <ul className="nalt-nav">
         {navLinks.map((link) =>
           link.dropdown ? (
+            // <li
+            //   key={link.label}
+            //   className={`nalt-nav-has-dropdown ${
+            //     openDropdown === link.label ? "open" : ""
+            //   } ${isDropdownActive(link.dropdown) ? "active" : ""}`}
+            // >
+            //   <button
+            //     className="nalt-nav-dropdown-trigger"
+            //     onClick={() => handleDropdown(link.label)}
+            //     aria-expanded={openDropdown === link.label}
+            //     aria-haspopup="true"
+            //   >
             <li
               key={link.label}
               className={`nalt-nav-has-dropdown ${
                 openDropdown === link.label ? "open" : ""
               } ${isDropdownActive(link.dropdown) ? "active" : ""}`}
+              onMouseEnter={() => setOpenDropdown(link.label)}
+              onMouseLeave={() => setOpenDropdown(null)}
             >
               <button
                 className="nalt-nav-dropdown-trigger"
-                onClick={() => handleDropdown(link.label)}
                 aria-expanded={openDropdown === link.label}
                 aria-haspopup="true"
               >

@@ -78,7 +78,7 @@
 /* ── Dropdown Panel ── */
 .nalt-dropdown {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   left: 0;
   background: #ffffff;
   border: 0.5px solid #e8e4f0;
