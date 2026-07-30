@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const endpoint = () => {
   return {
@@ -12,8 +12,6 @@ export const endpoint = () => {
     announcement: {
       list: `${apiUrl}/announcements`,
       detail: (slug) => `${apiUrl}/announcements/${slug}`,
-    }
+    },
   };
 };
-
-
