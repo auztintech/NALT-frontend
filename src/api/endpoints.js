@@ -3,15 +3,15 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 export const endpoint = () => {
   return {
     registration: {
-      create: `${apiUrl}/register/`,
+      create: `${apiUrl}/api/register/`,
     },
     article: {
-      list: `${apiUrl}/articles/`,
-      detail: (slug) => `${apiUrl}/articles/${slug}/`,
+      list: `${apiUrl}/api/articles/`,
+      detail: (slug) => `${apiUrl}/api/articles/${slug}/`,
     },
     announcement: {
-      list: `${apiUrl}/announcements`,
-      detail: (slug) => `${apiUrl}/announcements/${slug}`,
+      list: `${apiUrl}/api/announcements/`,
+      detail: (slug) => `${apiUrl}/api/announcements/${slug}/`,
     },
   };
 };
