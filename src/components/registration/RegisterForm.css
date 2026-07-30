@@ -356,3 +356,200 @@
     font-size: 32px;
   }
 }
+/* ── Multi-step additions ── */
+
+/* Step indicator */
+.register__steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-bottom: 32px;
+  position: relative;
+}
+.register__steps::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  background: #e2ddf5;
+  z-index: 0;
+}
+.register__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  gap: 6px;
+}
+.register__step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2ddf5;
+  color: #b0aac5;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.register__step.active .register__step-dot {
+  background: #2d1fa3;
+  color: #fff;
+}
+.register__step.done .register__step-dot {
+  background: #2d1fa3;
+  color: #fff;
+}
+.register__step-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #b0aac5;
+  text-align: center;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.register__step.active .register__step-label,
+.register__step.done .register__step-label {
+  color: #2d1fa3;
+}
+
+/* Row layout */
+.register__row {
+  display: flex;
+  gap: 14px;
+}
+.register__field--sm  { flex: 0 0 110px; }
+.register__field--grow { flex: 1; }
+
+/* Select */
+.register__field select {
+  padding: 12px 16px;
+  border: 1.5px solid #e2ddf5;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  color: #1a1040;
+  background: #faf9ff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232d1fa3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.register__field select:focus {
+  border-color: #2d1fa3;
+  box-shadow: 0 0 0 3px rgba(45, 31, 163, 0.1);
+  background-color: #fff;
+}
+
+/* Textarea */
+.register__field textarea {
+  padding: 12px 16px;
+  border: 1.5px solid #e2ddf5;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  color: #1a1040;
+  background: #faf9ff;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.register__field textarea::placeholder { color: #b0aac5; }
+.register__field textarea:focus {
+  border-color: #2d1fa3;
+  box-shadow: 0 0 0 3px rgba(45, 31, 163, 0.1);
+  background: #fff;
+}
+
+/* Radio cards */
+.register__radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.register__radio-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1.5px solid #e2ddf5;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #2e2a3e;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
+  background: #faf9ff;
+}
+.register__radio-card input[type="radio"] { display: none; }
+.register__radio-card.selected {
+  border-color: #2d1fa3;
+  background: #f0eeff;
+  color: #2d1fa3;
+}
+
+/* File upload */
+.register__file-wrap { position: relative; }
+.register__file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.register__file-label {
+  display: block;
+  padding: 12px 16px;
+  border: 1.5px dashed #c4b5fd;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #7c7895;
+  background: #faf9ff;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.register__file-label:hover {
+  border-color: #2d1fa3;
+  background: #f0eeff;
+  color: #2d1fa3;
+}
+
+/* Navigation buttons */
+.register__nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+.register__nav .register__btn { flex: 1; }
+.register__btn--outline {
+  background: transparent;
+  color: #2d1fa3;
+  border: 1.5px solid #2d1fa3;
+}
+.register__btn--outline:hover {
+  background: #f0eeff;
+  transform: none;
+}
+
+/* Required asterisk */
+span.req { color: #e53e3e; margin-left: 2px; }
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .register__row { flex-direction: column; gap: 20px; }
+  .register__field--sm { flex: unset; }
+  .register__step-label { display: none; }
+}
