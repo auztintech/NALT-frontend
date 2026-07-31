@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header";
 import { endpoint } from "../../api/endpoints";
 import "./AnnouncementDetail.css";
 import axios from "axios";
+import Footer from "../../components/Footer/Footer";
 
 const formatDate = (d) =>
   d
@@ -261,6 +262,8 @@ const AnnouncementDetail = () => {
           </aside>
         </div>
       </main>
+      <Footer />
+    
     </>
   );
 };

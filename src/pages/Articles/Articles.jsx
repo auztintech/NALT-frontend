@@ -6,6 +6,7 @@ import "./ArticleDetail.css";
 import axios from "axios";
 import "./Articles.css";
 import EmptyState from "../../components/EmptyState/EmptyState";
+import Footer from "../../components/Footer/Footer";
 
 /* ─── Helpers ─────────────────────────────────────────────── */
 const formatDate = (dateStr) => {
@@ -213,6 +214,7 @@ const Articles = () => {
           )}
         </div>
       </main>
+      <Footer />
     </>
   );
 };

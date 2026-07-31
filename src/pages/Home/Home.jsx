@@ -6,6 +6,7 @@ import ConferenceHighlight from "../../components/ConferenceHighlight/Conference
 import ConferenceBenefits from "../../components/ConferenceBenefits/ConferenceBenefits";
 import Leadership from "../../components/Leadership/Leadership";
 import ArticlesTicker from "../../components/ArticlesTicker/ArticlesTicker";
+import Footer from "../../components/Footer/Footer";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <ConferenceBenefits />
       <ArticlesTicker />
       <Leadership />
+      <Footer />
     </div>
   );
 };
