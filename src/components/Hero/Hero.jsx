@@ -15,7 +15,7 @@ const slides = [
       "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80",
   },
   {
-    tagline: "Annual Conference 2025",
+    tagline: "Annual Conference 2026",
     heading: "Advancing Legal",
     subheading: "Scholarship Together",
     description:
