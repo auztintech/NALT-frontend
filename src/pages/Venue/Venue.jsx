@@ -7,6 +7,7 @@ export default function Venue() {
   const embedUrl =
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.0!2d5.6145!3d6.3350!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10391584b9c69c8b%3A0x5e5c8e6b4a2f1d2a!2sFaculty%20of%20Law%2C%20University%20of%20Benin!5e0!3m2!1sen!2sng!4v1690000000000";
 
+    
   return (
     <>
     <Header />
