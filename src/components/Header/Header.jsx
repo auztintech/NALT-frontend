@@ -20,7 +20,7 @@ const navLinks = [
         sub: "Sessions, keynotes & workshops",
       },
       {
-        to: "/conference/resources",
+        to: "/articles",
         label: "Download Resources",
         sub: "Papers, abstracts & materials",
       },
@@ -30,7 +30,7 @@ const navLinks = [
     label: "Membership",
     dropdown: [
       {
-        to: "/membership/institutional",
+        to: "/membership/fees",
         label: "Institutional Subscription",
         sub: "Law faculties & institutions",
       },
@@ -42,7 +42,7 @@ const navLinks = [
         dividerBefore: true,
       },
       {
-        to: "/membership/payment",
+        to: "/register",
         label: "Payment & Registration",
         sub: "How to pay & join NALT",
       },
@@ -61,11 +61,7 @@ const navLinks = [
         label: "Venue & Directions",
         sub: "Map & getting there",
       },
-      {
-        to: "/logistics/shuttle",
-        label: "Airport Shuttle Schedule",
-        sub: "Pickup times & routes",
-      },
+      
     ],
   },
   {

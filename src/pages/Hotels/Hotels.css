@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;700&display=swap');
+
+.ht-page {
+  font-family: 'DM Sans', sans-serif;
+  background: #f7f5ff;
+  min-height: 100vh;
+}
+
+/* Hero */
+.ht-hero {
+  background: #0d0826;
+  padding: 80px 24px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.ht-hero::before {
+  content: "";
+  position: absolute;
+  top: -100px; left: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(45,31,163,0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ht-hero__inner {
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.ht-hero__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #c4b5fd;
+  margin: 0 0 14px;
+}
+.ht-hero__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+.ht-hero__sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* Body */
+.ht-body {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Notice */
+.ht-notice {
+  background: #ffffff;
+  border: 1px solid #e8e4f0;
+  border-left: 4px solid #2d1fa3;
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+.ht-notice p {
+  font-size: 14px;
+  color: #5a5475;
+  margin: 0;
+  line-height: 1.7;
+}
+.ht-notice strong { color: #1a1040; }
+
+/* Grid */
+.ht-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card */
+.ht-card {
+  background: #ffffff;
+  border: 1px solid #e8e4f0;
+  border-radius: 12px;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  transition: box-shadow 0.18s, border-color 0.18s;
+}
+.ht-card:hover {
+  box-shadow: 0 4px 20px rgba(45,31,163,0.08);
+  border-color: #c4b5fd;
+}
+.ht-card__number {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #e8e4f0;
+  min-width: 44px;
+  line-height: 1;
+}
+.ht-card__content { flex: 1; }
+.ht-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.ht-card__name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1040;
+  margin: 0;
+}
+.ht-card__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ht-card__tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: #2d1fa3;
+  background: #f0eeff;
+  border-radius: 4px;
+  padding: 3px 10px;
+}
+.ht-card__badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #7c7895;
+  background: #f7f5ff;
+  border: 1px solid #e8e4f0;
+  border-radius: 4px;
+  padding: 3px 10px;
+}
+.ht-card__location {
+  font-size: 13px;
+  color: #b0aac5;
+  margin: 0;
+}
+
+/* Info strip */
+.ht-info {
+  background: #0d0826;
+  border-radius: 14px;
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.ht-info__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 160px;
+}
+.ht-info__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+.ht-info__value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.4;
+}
+.ht-info__divider {
+  width: 1px;
+  height: 48px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 32px;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .ht-hero { padding: 56px 16px 48px; }
+  .ht-body { padding: 32px 16px 60px; }
+  .ht-card { padding: 18px 20px; gap: 16px; }
+  .ht-card__number { font-size: 22px; min-width: 32px; }
+  .ht-card__name { font-size: 16px; }
+  .ht-info { flex-direction: column; gap: 20px; padding: 24px 20px; }
+  .ht-info__divider { display: none; }
+}

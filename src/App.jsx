@@ -8,8 +8,14 @@ import AnnouncementDetail from "./pages/Announcement/AnnouncementDetail";
 import Contact from "./pages/Contact/Contact";
 import About from "./pages/About/About";
 import Register from "./pages/Register/Register";
+import Conferenceschedule from "./pages/Conferenceschedule/Conferenceschedule";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MembershipFees from "./pages/Membership/MembershipFees";
+import Venue from "./pages/Venue/Venue";
+import Hotels from "./pages/Hotels/Hotels";
+
+
 
 function App() {
   return (
@@ -25,6 +31,11 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/conference/schedule" element={<Conferenceschedule />} />
+          <Route path="/membership/fees" element={<MembershipFees />} />
+          <Route path="/logistics/venue" element={<Venue />} />
+          <Route path="/logistics/hotels" element={<Hotels />} />
+
         </Routes>
       </BrowserRouter>
     </>
