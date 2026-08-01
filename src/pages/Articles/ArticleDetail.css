@@ -401,4 +401,23 @@
     margin: 0;
     color: inherit;
   }
+
+  .ad-body {
+    word-break: normal;
+    overflow-wrap: break-word;
+    width: 100%;
+  }
+
+  .ad-layout {
+    padding: 0 16px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ad-article {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
 }
