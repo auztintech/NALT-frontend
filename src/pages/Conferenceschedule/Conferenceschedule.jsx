@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import "./ConferenceSchedule.css";
+import "./Conferenceschedule.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
