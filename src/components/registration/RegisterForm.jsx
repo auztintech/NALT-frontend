@@ -42,29 +42,25 @@ const STEPS = ["Personal", "Professional", "Membership", "Payment & Extras"];
 
 export default function RegisterForm() {
   const endpoints = endpoint();
-  const [loading, setLoading]   = useState(false);
-  const [success, setSuccess]   = useState(false);
-  const [step, setStep]         = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [step, setStep]       = useState(0);
 
   const [formData, setFormData] = useState({
-    // Personal
     title: "Prof.",
     full_name: "",
     email: "",
     phone_number: "",
-    // Professional
     designation: "",
     institution: "",
     faculty: "",
     department: "",
     state: "",
     country: "Nigeria",
-    // Membership
     membership_status: "member",
     membership_number: "",
     ticket_type: "member",
     attendance_mode: "physical",
-    // Payment & Extras
     payment_reference: "",
     payment_proof: null,
     special_requirements: "",
@@ -78,21 +74,29 @@ export default function RegisterForm() {
     }));
   };
 
-  const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
-  const prev = () => setStep((s) => Math.max(s - 1, 0));
+  // KEY FIX: next/prev are plain click handlers, NOT form submission
+  const next = (e) => {
+    e.preventDefault();
+    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  };
+  const prev = (e) => {
+    e.preventDefault();
+    setStep((s) => Math.max(s - 1, 0));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Guard: only submit when on the last step
+    if (step !== STEPS.length - 1) return;
     setLoading(true);
     try {
       const payload = new FormData();
       Object.entries(formData).forEach(([k, v]) => {
         if (v !== null && v !== "") payload.append(k, v);
       });
-      const response = await axios.post(endpoints.registration.create, payload, {
+      await axios.post(endpoints.registration.create, payload, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(response.data);
       setSuccess(true);
     } catch (error) {
       console.error(error.response?.data);
@@ -195,16 +199,20 @@ export default function RegisterForm() {
               {/* Step indicator */}
               <div className="register__steps">
                 {STEPS.map((label, i) => (
-                  <div key={label} className={`register__step ${i === step ? "active" : ""} ${i < step ? "done" : ""}`}>
+                  <div
+                    key={label}
+                    className={`register__step ${i === step ? "active" : ""} ${i < step ? "done" : ""}`}
+                  >
                     <div className="register__step-dot">{i < step ? "✓" : i + 1}</div>
                     <span className="register__step-label">{label}</span>
                   </div>
                 ))}
               </div>
 
+              {/* KEY FIX: onSubmit only fires on final step */}
               <form onSubmit={handleSubmit} className="register__form">
 
-                {/* ── Step 0: Personal ── */}
+                {/* Step 0: Personal */}
                 {step === 0 && (
                   <>
                     <div className="register__row">
@@ -216,45 +224,52 @@ export default function RegisterForm() {
                       </div>
                       <div className="register__field register__field--grow">
                         <label htmlFor="full_name">Full Name</label>
-                        <input id="full_name" type="text" name="full_name" placeholder="e.g. Amaka Okonkwo"
+                        <input id="full_name" type="text" name="full_name"
+                          placeholder="e.g. Amaka Okonkwo"
                           value={formData.full_name} onChange={handleChange} required />
                       </div>
                     </div>
                     <div className="register__field">
                       <label htmlFor="email">Email Address</label>
-                      <input id="email" type="email" name="email" placeholder="e.g. amaka@unilag.edu.ng"
+                      <input id="email" type="email" name="email"
+                        placeholder="e.g. amaka@unilag.edu.ng"
                         value={formData.email} onChange={handleChange} required />
                     </div>
                     <div className="register__field">
                       <label htmlFor="phone_number">Phone Number</label>
-                      <input id="phone_number" type="text" name="phone_number" placeholder="e.g. 08012345678"
+                      <input id="phone_number" type="text" name="phone_number"
+                        placeholder="e.g. 08012345678"
                         value={formData.phone_number} onChange={handleChange} required />
                     </div>
                   </>
                 )}
 
-                {/* ── Step 1: Professional ── */}
+                {/* Step 1: Professional */}
                 {step === 1 && (
                   <>
                     <div className="register__field">
                       <label htmlFor="designation">Designation / Job Title</label>
-                      <input id="designation" type="text" name="designation" placeholder="e.g. Senior Lecturer"
+                      <input id="designation" type="text" name="designation"
+                        placeholder="e.g. Senior Lecturer"
                         value={formData.designation} onChange={handleChange} />
                     </div>
                     <div className="register__field">
                       <label htmlFor="institution">Institution <span className="req">*</span></label>
-                      <input id="institution" type="text" name="institution" placeholder="e.g. University of Lagos"
+                      <input id="institution" type="text" name="institution"
+                        placeholder="e.g. University of Lagos"
                         value={formData.institution} onChange={handleChange} required />
                     </div>
                     <div className="register__row">
                       <div className="register__field register__field--grow">
                         <label htmlFor="faculty">Faculty</label>
-                        <input id="faculty" type="text" name="faculty" placeholder="e.g. Faculty of Law"
+                        <input id="faculty" type="text" name="faculty"
+                          placeholder="e.g. Faculty of Law"
                           value={formData.faculty} onChange={handleChange} />
                       </div>
                       <div className="register__field register__field--grow">
                         <label htmlFor="department">Department</label>
-                        <input id="department" type="text" name="department" placeholder="e.g. Public Law"
+                        <input id="department" type="text" name="department"
+                          placeholder="e.g. Public Law"
                           value={formData.department} onChange={handleChange} />
                       </div>
                     </div>
@@ -268,23 +283,28 @@ export default function RegisterForm() {
                       </div>
                       <div className="register__field register__field--grow">
                         <label htmlFor="country">Country</label>
-                        <input id="country" type="text" name="country" placeholder="Nigeria"
+                        <input id="country" type="text" name="country"
+                          placeholder="Nigeria"
                           value={formData.country} onChange={handleChange} />
                       </div>
                     </div>
                   </>
                 )}
 
-                {/* ── Step 2: Membership ── */}
+                {/* Step 2: Membership */}
                 {step === 2 && (
                   <>
                     <div className="register__field">
                       <label>Membership Status</label>
                       <div className="register__radio-group">
                         {MEMBERSHIP_STATUS.map(({ value, label }) => (
-                          <label key={value} className={`register__radio-card ${formData.membership_status === value ? "selected" : ""}`}>
+                          <label
+                            key={value}
+                            className={`register__radio-card ${formData.membership_status === value ? "selected" : ""}`}
+                          >
                             <input type="radio" name="membership_status" value={value}
-                              checked={formData.membership_status === value} onChange={handleChange} />
+                              checked={formData.membership_status === value}
+                              onChange={handleChange} />
                             {label}
                           </label>
                         ))}
@@ -293,7 +313,10 @@ export default function RegisterForm() {
 
                     {formData.membership_status === "member" && (
                       <div className="register__field">
-                        <label htmlFor="membership_number">Membership Number</label>
+                        {/* FIX: marked as optional */}
+                        <label htmlFor="membership_number">
+                          Membership Number <span className="register__optional">(Optional)</span>
+                        </label>
                         <input id="membership_number" type="text" name="membership_number"
                           placeholder="e.g. NALT-2024-001"
                           value={formData.membership_number} onChange={handleChange} />
@@ -304,9 +327,13 @@ export default function RegisterForm() {
                       <label>Ticket Type</label>
                       <div className="register__radio-group">
                         {TICKET_CHOICES.map(({ value, label }) => (
-                          <label key={value} className={`register__radio-card ${formData.ticket_type === value ? "selected" : ""}`}>
+                          <label
+                            key={value}
+                            className={`register__radio-card ${formData.ticket_type === value ? "selected" : ""}`}
+                          >
                             <input type="radio" name="ticket_type" value={value}
-                              checked={formData.ticket_type === value} onChange={handleChange} />
+                              checked={formData.ticket_type === value}
+                              onChange={handleChange} />
                             {label}
                           </label>
                         ))}
@@ -317,9 +344,13 @@ export default function RegisterForm() {
                       <label>Attendance Mode</label>
                       <div className="register__radio-group">
                         {ATTENDANCE_MODE.map(({ value, label }) => (
-                          <label key={value} className={`register__radio-card ${formData.attendance_mode === value ? "selected" : ""}`}>
+                          <label
+                            key={value}
+                            className={`register__radio-card ${formData.attendance_mode === value ? "selected" : ""}`}
+                          >
                             <input type="radio" name="attendance_mode" value={value}
-                              checked={formData.attendance_mode === value} onChange={handleChange} />
+                              checked={formData.attendance_mode === value}
+                              onChange={handleChange} />
                             {label}
                           </label>
                         ))}
@@ -328,29 +359,40 @@ export default function RegisterForm() {
                   </>
                 )}
 
-                {/* ── Step 3: Payment & Extras ── */}
+                {/* Step 3: Payment & Extras */}
                 {step === 3 && (
                   <>
                     <div className="register__field">
-                      <label htmlFor="payment_reference">Payment Reference</label>
+                      <label htmlFor="payment_reference">Payment Reference <span className="register__optional">(Optional)</span></label>
                       <input id="payment_reference" type="text" name="payment_reference"
                         placeholder="e.g. TXN-2026-XXXXXX"
                         value={formData.payment_reference} onChange={handleChange} />
                     </div>
                     <div className="register__field">
-                      <label htmlFor="payment_proof">Upload Payment Proof</label>
+                      <label htmlFor="payment_proof">
+                        Upload Payment Proof <span className="register__optional">(Optional)</span>
+                      </label>
+                      {/* KEY FIX: file input is standalone, NOT inside a form-submitting element */}
                       <div className="register__file-wrap">
                         <label htmlFor="payment_proof" className="register__file-label">
-                          {formData.payment_proof ? formData.payment_proof.name : "Choose file (PDF / Image)"}
+                          {formData.payment_proof
+                            ? formData.payment_proof.name
+                            : "Choose file (PDF / Image)"}
                         </label>
-                        <input id="payment_proof" type="file" name="payment_proof"
+                        <input
+                          id="payment_proof"
+                          type="file"
+                          name="payment_proof"
                           accept=".pdf,.jpg,.jpeg,.png"
                           onChange={handleChange}
-                          className="register__file-input" />
+                          className="register__file-input"
+                        />
                       </div>
                     </div>
                     <div className="register__field">
-                      <label htmlFor="special_requirements">Special Requirements</label>
+                      <label htmlFor="special_requirements">
+                        Special Requirements <span className="register__optional">(Optional)</span>
+                      </label>
                       <textarea id="special_requirements" name="special_requirements"
                         placeholder="Dietary, accessibility, or other requirements…"
                         rows={4} value={formData.special_requirements} onChange={handleChange} />
@@ -361,16 +403,28 @@ export default function RegisterForm() {
                 {/* Navigation */}
                 <div className="register__nav">
                   {step > 0 && (
-                    <button type="button" className="register__btn register__btn--outline" onClick={prev}>
+                    <button
+                      type="button"
+                      className="register__btn register__btn--outline"
+                      onClick={prev}
+                    >
                       ← Back
                     </button>
                   )}
                   {step < STEPS.length - 1 ? (
-                    <button type="button" className="register__btn" onClick={next}>
+                    <button
+                      type="button"
+                      className="register__btn"
+                      onClick={next}
+                    >
                       Continue →
                     </button>
                   ) : (
-                    <button type="submit" className="register__btn" disabled={loading}>
+                    <button
+                      type="submit"
+                      className="register__btn"
+                      disabled={loading}
+                    >
                       {loading ? <span className="register__spinner" /> : "Submit Registration"}
                     </button>
                   )}
