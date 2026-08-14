@@ -6,6 +6,7 @@ import DrEsa from "../../assets/images/dresa.png";
 import DrNenna from "../../assets/images/drnnena.jpg";
 import DrMoha from "../../assets/images/drmuhammed.jpg";
 import DrAlao from "../../assets/images/Alao.jpg";
+import Assist from "../../assets/images/assist.jpeg"
 import Placeholder from "../../assets/images/placeholder.avif";
 
 const leaders = [
@@ -57,7 +58,7 @@ const leaders = [
     description:
       "Dr. Ukam assists in managing NALT's secretariat and operations, drawing on his academic grounding at the University of Nigeria, Nsukka. He is a committed advocate for collegiate engagement and legal scholarship.",
 
-    image: Placeholder,
+    image: Assist,
   },
   {
     number: "06",

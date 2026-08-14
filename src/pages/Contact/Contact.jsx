@@ -144,12 +144,12 @@ export default function ContactUs() {
               <div className="nc-info-block">
                 <p className="nc-info-label">Email</p>
                 <p className="nc-info-value">
-                  <a href="mailto:conference@nalt.org.ng" className="nc-link">
-                    conference@nalt.org.ng
+                  <a href="mailto:bbzayeibb@uniben.edu" className="nc-link">
+                    bbzayeibb@uniben.edu
                   </a>
                   <br />
-                  <a href="mailto:secretariat@nalt.org.ng" className="nc-link">
-                    secretariat@nalt.org.ng
+                  <a href="mailto:ngozi.stewart-unuigbe@gmail.com" className="nc-link">
+                    ngozi.stewart-unuigbe@gmail.com
                   </a>
                 </p>
               </div>
@@ -159,12 +159,12 @@ export default function ContactUs() {
               <div className="nc-info-block">
                 <p className="nc-info-label">Phone</p>
                 <p className="nc-info-value">
-                  <a href="tel:+2348012345678" className="nc-link">
-                    +234 801 234 5678
+                  <a href="tel:+234 802 339 7942" className="nc-link">
+                    +234 802 339 7942
                   </a>
                   <br />
-                  <a href="tel:+2348098765432" className="nc-link">
-                    +234 809 876 5432
+                  <a href="tel:+234 803 712 2600" className="nc-link">
+                    +234 803 712 2600
                   </a>
                 </p>
               </div>
