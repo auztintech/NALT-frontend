@@ -30,6 +30,13 @@ const ATTENDANCE_MODE = [
   { value: "virtual",  label: "Virtual" },
 ];
 
+const SUBSCRIPTION_TYPES = [
+  { value: "institutional",       label: "Institutional",        amount: "₦50,000" },
+  { value: "readers_professors",  label: "Readers & Professors", amount: "₦30,000" },
+  { value: "senior_lecturer",     label: "Senior Lecturers",     amount: "₦25,000" },
+  { value: "lecturer_and_below",  label: "Lecturer I and Below", amount: "₦20,000" },
+];
+
 const NIGERIAN_STATES = [
   "Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue",
   "Borno","Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT",
@@ -59,6 +66,7 @@ export default function RegisterForm() {
     country: "Nigeria",
     membership_status: "member",
     membership_number: "",
+    subscription_type: "",
     ticket_type: "member",
     attendance_mode: "physical",
     payment_reference: "",
@@ -74,7 +82,6 @@ export default function RegisterForm() {
     }));
   };
 
-  // KEY FIX: next/prev are plain click handlers, NOT form submission
   const next = (e) => {
     e.preventDefault();
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
@@ -86,7 +93,6 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Guard: only submit when on the last step
     if (step !== STEPS.length - 1) return;
     setLoading(true);
     try {
@@ -117,10 +123,14 @@ export default function RegisterForm() {
       designation: "", institution: "", faculty: "", department: "",
       state: "", country: "Nigeria",
       membership_status: "member", membership_number: "",
+      subscription_type: "",
       ticket_type: "member", attendance_mode: "physical",
       payment_reference: "", payment_proof: null, special_requirements: "",
     });
   };
+
+  // Get selected subscription details for payment step
+  const selectedSub = SUBSCRIPTION_TYPES.find(s => s.value === formData.subscription_type);
 
   return (
     <section className="register">
@@ -209,7 +219,6 @@ export default function RegisterForm() {
                 ))}
               </div>
 
-              {/* KEY FIX: onSubmit only fires on final step */}
               <form onSubmit={handleSubmit} className="register__form">
 
                 {/* Step 0: Personal */}
@@ -313,7 +322,6 @@ export default function RegisterForm() {
 
                     {formData.membership_status === "member" && (
                       <div className="register__field">
-                        {/* FIX: marked as optional */}
                         <label htmlFor="membership_number">
                           Membership Number <span className="register__optional">(Optional)</span>
                         </label>
@@ -322,6 +330,30 @@ export default function RegisterForm() {
                           value={formData.membership_number} onChange={handleChange} />
                       </div>
                     )}
+
+                    {/* Subscription type */}
+                    <div className="register__field">
+                      <label>Subscription Type <span className="req">*</span></label>
+                      <p className="register__field-hint">
+                        Select your category — this determines your subscription fee.
+                      </p>
+                      <div className="register__sub-group">
+                        {SUBSCRIPTION_TYPES.map(({ value, label, amount }) => (
+                          <label
+                            key={value}
+                            className={`register__sub-card ${formData.subscription_type === value ? "selected" : ""}`}
+                          >
+                            <input type="radio" name="subscription_type" value={value}
+                              checked={formData.subscription_type === value}
+                              onChange={handleChange} required />
+                            <div className="register__sub-card__info">
+                              <span className="register__sub-card__label">{label}</span>
+                              <span className="register__sub-card__amount">{amount}</span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
 
                     <div className="register__field">
                       <label>Ticket Type</label>
@@ -362,17 +394,38 @@ export default function RegisterForm() {
                 {/* Step 3: Payment & Extras */}
                 {step === 3 && (
                   <>
+                    {/* Show selected subscription summary */}
+                    {selectedSub && (
+                      <div className="register__payment-summary">
+                        <div className="register__payment-summary__row">
+                          <span className="register__payment-summary__key">Subscription Type</span>
+                          <span className="register__payment-summary__val">{selectedSub.label}</span>
+                        </div>
+                        <div className="register__payment-summary__row register__payment-summary__row--total">
+                          <span className="register__payment-summary__key">Amount Due</span>
+                          <span className="register__payment-summary__amount">{selectedSub.amount}</span>
+                        </div>
+                        <p className="register__payment-summary__note">
+                          Pay to: <strong>Nigerian Association of Law Teachers</strong><br />
+                          Account No: <strong>2006806045</strong> · Bank: <strong>FCMB</strong><br />
+                          Use your <strong>full name</strong> as payment reference.
+                        </p>
+                      </div>
+                    )}
+
                     <div className="register__field">
-                      <label htmlFor="payment_reference">Payment Reference <span className="register__optional">(Optional)</span></label>
+                      <label htmlFor="payment_reference">
+                        Payment Reference <span className="register__optional">(Optional)</span>
+                      </label>
                       <input id="payment_reference" type="text" name="payment_reference"
                         placeholder="e.g. TXN-2026-XXXXXX"
                         value={formData.payment_reference} onChange={handleChange} />
                     </div>
+
                     <div className="register__field">
                       <label htmlFor="payment_proof">
                         Upload Payment Proof <span className="register__optional">(Optional)</span>
                       </label>
-                      {/* KEY FIX: file input is standalone, NOT inside a form-submitting element */}
                       <div className="register__file-wrap">
                         <label htmlFor="payment_proof" className="register__file-label">
                           {formData.payment_proof
@@ -389,6 +442,7 @@ export default function RegisterForm() {
                         />
                       </div>
                     </div>
+
                     <div className="register__field">
                       <label htmlFor="special_requirements">
                         Special Requirements <span className="register__optional">(Optional)</span>
@@ -403,28 +457,16 @@ export default function RegisterForm() {
                 {/* Navigation */}
                 <div className="register__nav">
                   {step > 0 && (
-                    <button
-                      type="button"
-                      className="register__btn register__btn--outline"
-                      onClick={prev}
-                    >
+                    <button type="button" className="register__btn register__btn--outline" onClick={prev}>
                       ← Back
                     </button>
                   )}
                   {step < STEPS.length - 1 ? (
-                    <button
-                      type="button"
-                      className="register__btn"
-                      onClick={next}
-                    >
+                    <button type="button" className="register__btn" onClick={next}>
                       Continue →
                     </button>
                   ) : (
-                    <button
-                      type="submit"
-                      className="register__btn"
-                      disabled={loading}
-                    >
+                    <button type="submit" className="register__btn" disabled={loading}>
                       {loading ? <span className="register__spinner" /> : "Submit Registration"}
                     </button>
                   )}

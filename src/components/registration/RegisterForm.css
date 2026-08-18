@@ -559,3 +559,128 @@ span.req { color: #e53e3e; margin-left: 2px; }
   color: #b0aac5;
   margin-left: 4px;
 }
+/* ── Subscription type cards ── */
+.register__field-hint {
+  font-size: 12px;
+  color: #b0aac5;
+  margin: -4px 0 10px;
+}
+
+.register__sub-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.register__sub-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid #e2ddf5;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #faf9ff;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.register__sub-card input[type="radio"] {
+  display: none;
+}
+
+.register__sub-card.selected {
+  border-color: #2d1fa3;
+  background: #f0eeff;
+}
+
+.register__sub-card__info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.register__sub-card__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e2a3e;
+}
+
+.register__sub-card.selected .register__sub-card__label {
+  color: #2d1fa3;
+}
+
+.register__sub-card__amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1040;
+}
+
+.register__sub-card.selected .register__sub-card__amount {
+  color: #2d1fa3;
+}
+
+/* ── Payment summary box ── */
+.register__payment-summary {
+  background: #f0eeff;
+  border: 1.5px solid #c4b5fd;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 4px;
+}
+
+.register__payment-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2ddf5;
+}
+
+.register__payment-summary__row:last-of-type {
+  border-bottom: none;
+}
+
+.register__payment-summary__row--total {
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.register__payment-summary__key {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #7c7895;
+}
+
+.register__payment-summary__val {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a1040;
+}
+
+.register__payment-summary__amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d1fa3;
+}
+
+.register__payment-summary__note {
+  font-size: 12.5px;
+  color: #5a5475;
+  margin: 12px 0 0;
+  line-height: 1.7;
+  padding-top: 12px;
+  border-top: 1px solid #e2ddf5;
+}
+
+.register__payment-summary__note strong {
+  color: #1a1040;
+}
+
+/* ── Optional label ── */
+.register__optional {
+  font-size: 11px;
+  font-weight: 400;
+  color: #b0aac5;
+  margin-left: 4px;
+}
