@@ -30,13 +30,6 @@ const ATTENDANCE_MODE = [
   { value: "virtual",  label: "Virtual" },
 ];
 
-const SUBSCRIPTION_TYPES = [
-  { value: "institutional",       label: "Institutional",        amount: "₦50,000" },
-  { value: "readers_professors",  label: "Readers & Professors", amount: "₦30,000" },
-  { value: "senior_lecturer",     label: "Senior Lecturers",     amount: "₦25,000" },
-  { value: "lecturer_and_below",  label: "Lecturer I and Below", amount: "₦20,000" },
-];
-
 const NIGERIAN_STATES = [
   "Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue",
   "Borno","Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT",
@@ -44,6 +37,28 @@ const NIGERIAN_STATES = [
   "Kwara","Lagos","Nasarawa","Niger","Ogun","Ondo","Osun","Oyo",
   "Plateau","Rivers","Sokoto","Taraba","Yobe","Zamfara",
 ];
+
+// All payment options — subscription + registration
+const PAYMENT_OPTIONS = [
+  // Subscription fees
+  { key: "sub_institutional",      group: "Subscription",   label: "Institutional Subscription",   amount: 50000,  display: "₦50,000",  account: "FCMB" },
+  { key: "sub_readers_professors", group: "Subscription",   label: "Readers & Professors",          amount: 30000,  display: "₦30,000",  account: "FCMB" },
+  { key: "sub_senior_lecturer",    group: "Subscription",   label: "Senior Lecturers",              amount: 25000,  display: "₦25,000",  account: "FCMB" },
+  { key: "sub_lecturer_below",     group: "Subscription",   label: "Lecturer I and Below",          amount: 20000,  display: "₦20,000",  account: "FCMB" },
+  // Registration fees
+  { key: "reg_early_bird",         group: "Registration",   label: "Early Bird (ends 30 Aug 2026)", amount: 30000,  display: "₦30,000",  account: "Zenith" },
+  { key: "reg_regular",            group: "Registration",   label: "Regular (ends 30 Sep 2026)",    amount: 40000,  display: "₦40,000",  account: "Zenith" },
+  { key: "reg_late",               group: "Registration",   label: "Late Registration (October)",   amount: 50000,  display: "₦50,000",  account: "Zenith" },
+  // Others
+  { key: "reg_non_member",         group: "Others",         label: "Non-Member",                    amount: 100000, display: "₦100,000", account: "Zenith" },
+  { key: "reg_international",      group: "Others",         label: "International",                 amount: null,   display: "$250",      account: "Zenith" },
+  { key: "reg_online",             group: "Others",         label: "Online",                        amount: null,   display: "₦20,000 / $25", account: "Zenith" },
+];
+
+const ACCOUNT_DETAILS = {
+  FCMB:   { name: "Nigerian Association of Law Teachers", number: "2006806045",  bank: "First City Monument Bank (FCMB)" },
+  Zenith: { name: "Faculty of Law: NALT Conference",       number: "1312045217", bank: "Zenith Bank" },
+};
 
 const STEPS = ["Personal", "Professional", "Membership", "Payment & Extras"];
 
@@ -66,20 +81,35 @@ export default function RegisterForm() {
     country: "Nigeria",
     membership_status: "member",
     membership_number: "",
-    subscription_type: "",
     ticket_type: "member",
     attendance_mode: "physical",
-    payment_reference: "",
-    payment_proof: null,
     special_requirements: "",
   });
 
+  // Selected payment options (multiple)
+  const [selectedPayments, setSelectedPayments] = useState([]);
+  // Payment proofs keyed by payment option key
+  const [paymentProofs, setPaymentProofs] = useState({});
+  // Payment references keyed by payment option key
+  const [paymentRefs, setPaymentRefs] = useState({});
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const togglePayment = (key) => {
+    setSelectedPayments((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
+
+  const handleProofChange = (key, file) => {
+    setPaymentProofs((prev) => ({ ...prev, [key]: file }));
+  };
+
+  const handleRefChange = (key, val) => {
+    setPaymentRefs((prev) => ({ ...prev, [key]: val }));
   };
 
   const next = (e) => {
@@ -99,6 +129,13 @@ export default function RegisterForm() {
       const payload = new FormData();
       Object.entries(formData).forEach(([k, v]) => {
         if (v !== null && v !== "") payload.append(k, v);
+      });
+      // Send selected payments as JSON string
+      payload.append("selected_payments", JSON.stringify(selectedPayments));
+      // Send refs and proofs per payment
+      selectedPayments.forEach((key) => {
+        if (paymentRefs[key]) payload.append(`ref_${key}`, paymentRefs[key]);
+        if (paymentProofs[key]) payload.append(`proof_${key}`, paymentProofs[key]);
       });
       await axios.post(endpoints.registration.create, payload, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -123,28 +160,35 @@ export default function RegisterForm() {
       designation: "", institution: "", faculty: "", department: "",
       state: "", country: "Nigeria",
       membership_status: "member", membership_number: "",
-      subscription_type: "",
       ticket_type: "member", attendance_mode: "physical",
-      payment_reference: "", payment_proof: null, special_requirements: "",
+      special_requirements: "",
     });
+    setSelectedPayments([]);
+    setPaymentProofs({});
+    setPaymentRefs({});
   };
 
-  // Get selected subscription details for payment step
-  const selectedSub = SUBSCRIPTION_TYPES.find(s => s.value === formData.subscription_type);
+  // Compute total for selected payments (numeric only)
+  const total = selectedPayments.reduce((sum, key) => {
+    const opt = PAYMENT_OPTIONS.find((o) => o.key === key);
+    return opt?.amount ? sum + opt.amount : sum;
+  }, 0);
+
+  const formatAmount = (n) => `₦${n.toLocaleString()}`;
+
+  // Group payment options for display
+  const groups = ["Subscription", "Registration", "Others"];
 
   return (
     <section className="register">
       {/* ── Left panel ── */}
       <div className="register__left">
         <p className="register__eyebrow">57th Annual Conference</p>
-        <h1 className="register__heading">
-          Secure Your <span>Spot Today</span>
-        </h1>
+        <h1 className="register__heading">Secure Your <span>Spot Today</span></h1>
         <p className="register__subtext">
           Join law educators from across Nigeria at the 57th NALT National
           Conference hosted by the Faculty of Law, University of Benin.
         </p>
-
         <div className="register__details">
           <div className="register__detail-item">
             <div className="register__detail-icon" />
@@ -157,27 +201,21 @@ export default function RegisterForm() {
             <div className="register__detail-icon" />
             <div>
               <span className="register__detail-label">Venue</span>
-              <span className="register__detail-value">
-                Faculty of Law, University of Benin, Benin City, Edo State
-              </span>
+              <span className="register__detail-value">Faculty of Law, University of Benin, Benin City, Edo State</span>
             </div>
           </div>
           <div className="register__detail-item">
             <div className="register__detail-icon" />
             <div>
               <span className="register__detail-label">Early Bird</span>
-              <span className="register__detail-value">
-                First 100 registrants get a special prize
-              </span>
+              <span className="register__detail-value">First 100 registrants get a special prize</span>
             </div>
           </div>
         </div>
-
         <div className="register__theme">
           <span className="register__theme-label">Conference Theme</span>
           <p className="register__theme-text">
-            "Legal Education, Emerging Technologies and the Challenges of the
-            Sustainable Development Goals"
+            "Legal Education, Emerging Technologies and the Challenges of the Sustainable Development Goals"
           </p>
         </div>
       </div>
@@ -189,30 +227,20 @@ export default function RegisterForm() {
             <div className="register__success">
               <div className="register__success-icon">✓</div>
               <h3>Registration Successful!</h3>
-              <p>
-                Thank you for registering. You will receive a confirmation
-                email shortly.
-              </p>
-              <button className="register__btn" onClick={resetForm}>
-                Register Another
-              </button>
+              <p>Thank you for registering. You will receive a confirmation email shortly.</p>
+              <button className="register__btn" onClick={resetForm}>Register Another</button>
             </div>
           ) : (
             <>
               <div className="register__form-header">
                 <h2 className="register__form-title">Register for the Conference</h2>
-                <p className="register__form-subtitle">
-                  Fill in your details below to complete your registration.
-                </p>
+                <p className="register__form-subtitle">Fill in your details below to complete your registration.</p>
               </div>
 
-              {/* Step indicator */}
+              {/* Steps */}
               <div className="register__steps">
                 {STEPS.map((label, i) => (
-                  <div
-                    key={label}
-                    className={`register__step ${i === step ? "active" : ""} ${i < step ? "done" : ""}`}
-                  >
+                  <div key={label} className={`register__step ${i === step ? "active" : ""} ${i < step ? "done" : ""}`}>
                     <div className="register__step-dot">{i < step ? "✓" : i + 1}</div>
                     <span className="register__step-label">{label}</span>
                   </div>
@@ -233,21 +261,18 @@ export default function RegisterForm() {
                       </div>
                       <div className="register__field register__field--grow">
                         <label htmlFor="full_name">Full Name</label>
-                        <input id="full_name" type="text" name="full_name"
-                          placeholder="e.g. Amaka Okonkwo"
+                        <input id="full_name" type="text" name="full_name" placeholder="e.g. Amaka Okonkwo"
                           value={formData.full_name} onChange={handleChange} required />
                       </div>
                     </div>
                     <div className="register__field">
                       <label htmlFor="email">Email Address</label>
-                      <input id="email" type="email" name="email"
-                        placeholder="e.g. amaka@unilag.edu.ng"
+                      <input id="email" type="email" name="email" placeholder="e.g. amaka@unilag.edu.ng"
                         value={formData.email} onChange={handleChange} required />
                     </div>
                     <div className="register__field">
                       <label htmlFor="phone_number">Phone Number</label>
-                      <input id="phone_number" type="text" name="phone_number"
-                        placeholder="e.g. 08012345678"
+                      <input id="phone_number" type="text" name="phone_number" placeholder="e.g. 08012345678"
                         value={formData.phone_number} onChange={handleChange} required />
                     </div>
                   </>
@@ -258,27 +283,23 @@ export default function RegisterForm() {
                   <>
                     <div className="register__field">
                       <label htmlFor="designation">Designation / Job Title</label>
-                      <input id="designation" type="text" name="designation"
-                        placeholder="e.g. Senior Lecturer"
+                      <input id="designation" type="text" name="designation" placeholder="e.g. Senior Lecturer"
                         value={formData.designation} onChange={handleChange} />
                     </div>
                     <div className="register__field">
                       <label htmlFor="institution">Institution <span className="req">*</span></label>
-                      <input id="institution" type="text" name="institution"
-                        placeholder="e.g. University of Lagos"
+                      <input id="institution" type="text" name="institution" placeholder="e.g. University of Lagos"
                         value={formData.institution} onChange={handleChange} required />
                     </div>
                     <div className="register__row">
                       <div className="register__field register__field--grow">
                         <label htmlFor="faculty">Faculty</label>
-                        <input id="faculty" type="text" name="faculty"
-                          placeholder="e.g. Faculty of Law"
+                        <input id="faculty" type="text" name="faculty" placeholder="e.g. Faculty of Law"
                           value={formData.faculty} onChange={handleChange} />
                       </div>
                       <div className="register__field register__field--grow">
                         <label htmlFor="department">Department</label>
-                        <input id="department" type="text" name="department"
-                          placeholder="e.g. Public Law"
+                        <input id="department" type="text" name="department" placeholder="e.g. Public Law"
                           value={formData.department} onChange={handleChange} />
                       </div>
                     </div>
@@ -292,8 +313,7 @@ export default function RegisterForm() {
                       </div>
                       <div className="register__field register__field--grow">
                         <label htmlFor="country">Country</label>
-                        <input id="country" type="text" name="country"
-                          placeholder="Nigeria"
+                        <input id="country" type="text" name="country" placeholder="Nigeria"
                           value={formData.country} onChange={handleChange} />
                       </div>
                     </div>
@@ -307,19 +327,14 @@ export default function RegisterForm() {
                       <label>Membership Status</label>
                       <div className="register__radio-group">
                         {MEMBERSHIP_STATUS.map(({ value, label }) => (
-                          <label
-                            key={value}
-                            className={`register__radio-card ${formData.membership_status === value ? "selected" : ""}`}
-                          >
+                          <label key={value} className={`register__radio-card ${formData.membership_status === value ? "selected" : ""}`}>
                             <input type="radio" name="membership_status" value={value}
-                              checked={formData.membership_status === value}
-                              onChange={handleChange} />
+                              checked={formData.membership_status === value} onChange={handleChange} />
                             {label}
                           </label>
                         ))}
                       </div>
                     </div>
-
                     {formData.membership_status === "member" && (
                       <div className="register__field">
                         <label htmlFor="membership_number">
@@ -330,59 +345,25 @@ export default function RegisterForm() {
                           value={formData.membership_number} onChange={handleChange} />
                       </div>
                     )}
-
-                    {/* Subscription type */}
-                    <div className="register__field">
-                      <label>Subscription Type <span className="req">*</span></label>
-                      <p className="register__field-hint">
-                        Select your category — this determines your subscription fee.
-                      </p>
-                      <div className="register__sub-group">
-                        {SUBSCRIPTION_TYPES.map(({ value, label, amount }) => (
-                          <label
-                            key={value}
-                            className={`register__sub-card ${formData.subscription_type === value ? "selected" : ""}`}
-                          >
-                            <input type="radio" name="subscription_type" value={value}
-                              checked={formData.subscription_type === value}
-                              onChange={handleChange} required />
-                            <div className="register__sub-card__info">
-                              <span className="register__sub-card__label">{label}</span>
-                              <span className="register__sub-card__amount">{amount}</span>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
                     <div className="register__field">
                       <label>Ticket Type</label>
                       <div className="register__radio-group">
                         {TICKET_CHOICES.map(({ value, label }) => (
-                          <label
-                            key={value}
-                            className={`register__radio-card ${formData.ticket_type === value ? "selected" : ""}`}
-                          >
+                          <label key={value} className={`register__radio-card ${formData.ticket_type === value ? "selected" : ""}`}>
                             <input type="radio" name="ticket_type" value={value}
-                              checked={formData.ticket_type === value}
-                              onChange={handleChange} />
+                              checked={formData.ticket_type === value} onChange={handleChange} />
                             {label}
                           </label>
                         ))}
                       </div>
                     </div>
-
                     <div className="register__field">
                       <label>Attendance Mode</label>
                       <div className="register__radio-group">
                         {ATTENDANCE_MODE.map(({ value, label }) => (
-                          <label
-                            key={value}
-                            className={`register__radio-card ${formData.attendance_mode === value ? "selected" : ""}`}
-                          >
+                          <label key={value} className={`register__radio-card ${formData.attendance_mode === value ? "selected" : ""}`}>
                             <input type="radio" name="attendance_mode" value={value}
-                              checked={formData.attendance_mode === value}
-                              onChange={handleChange} />
+                              checked={formData.attendance_mode === value} onChange={handleChange} />
                             {label}
                           </label>
                         ))}
@@ -394,62 +375,91 @@ export default function RegisterForm() {
                 {/* Step 3: Payment & Extras */}
                 {step === 3 && (
                   <>
-                    {/* Show selected subscription summary */}
-                    {selectedSub && (
-                      <div className="register__payment-summary">
-                        <div className="register__payment-summary__row">
-                          <span className="register__payment-summary__key">Subscription Type</span>
-                          <span className="register__payment-summary__val">{selectedSub.label}</span>
-                        </div>
-                        <div className="register__payment-summary__row register__payment-summary__row--total">
-                          <span className="register__payment-summary__key">Amount Due</span>
-                          <span className="register__payment-summary__amount">{selectedSub.amount}</span>
-                        </div>
-                        <p className="register__payment-summary__note">
-                          Pay to: <strong>Nigerian Association of Law Teachers</strong><br />
-                          Account No: <strong>2006806045</strong> · Bank: <strong>FCMB</strong><br />
-                          Use your <strong>full name</strong> as payment reference.
-                        </p>
+                    <p className="register__field-hint" style={{ marginBottom: 16, fontSize: 13, color: "#5a5475" }}>
+                      Select all payments you are making. You can pay subscription and registration at the same time.
+                      A separate upload field will appear for each one you select.
+                    </p>
+
+                    {/* Payment checkboxes grouped */}
+                    {groups.map((group) => (
+                      <div key={group} className="register__pay-group">
+                        <p className="register__pay-group__label">{group} Fees</p>
+                        {PAYMENT_OPTIONS.filter((o) => o.group === group).map((opt) => (
+                          <label
+                            key={opt.key}
+                            className={`register__pay-option ${selectedPayments.includes(opt.key) ? "selected" : ""}`}
+                            onClick={() => togglePayment(opt.key)}
+                          >
+                            <span className={`register__pay-check ${selectedPayments.includes(opt.key) ? "checked" : ""}`}>
+                              {selectedPayments.includes(opt.key) ? "✓" : ""}
+                            </span>
+                            <span className="register__pay-option__label">{opt.label}</span>
+                            <span className="register__pay-option__amount">{opt.display}</span>
+                          </label>
+                        ))}
+                      </div>
+                    ))}
+
+                    {/* Total */}
+                    {selectedPayments.length > 0 && (
+                      <div className="register__pay-total">
+                        <span>Total Selected</span>
+                        <span className="register__pay-total__amount">
+                          {total > 0 ? formatAmount(total) : "See amounts above"}
+                        </span>
                       </div>
                     )}
 
-                    <div className="register__field">
-                      <label htmlFor="payment_reference">
-                        Payment Reference <span className="register__optional">(Optional)</span>
-                      </label>
-                      <input id="payment_reference" type="text" name="payment_reference"
-                        placeholder="e.g. TXN-2026-XXXXXX"
-                        value={formData.payment_reference} onChange={handleChange} />
-                    </div>
-
-                    <div className="register__field">
-                      <label htmlFor="payment_proof">
-                        Upload Payment Proof <span className="register__optional">(Optional)</span>
-                      </label>
-                      <div className="register__file-wrap">
-                        <label htmlFor="payment_proof" className="register__file-label">
-                          {formData.payment_proof
-                            ? formData.payment_proof.name
-                            : "Choose file (PDF / Image)"}
-                        </label>
-                        <input
-                          id="payment_proof"
-                          type="file"
-                          name="payment_proof"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={handleChange}
-                          className="register__file-input"
-                        />
+                    {/* Per-payment upload fields */}
+                    {selectedPayments.length > 0 && (
+                      <div className="register__proofs">
+                        <p className="register__proofs__heading">Upload Payment Proofs</p>
+                        <p className="register__proofs__sub">
+                          Upload a separate proof for each payment you selected.
+                        </p>
+                        {selectedPayments.map((key) => {
+                          const opt = PAYMENT_OPTIONS.find((o) => o.key === key);
+                          const acct = ACCOUNT_DETAILS[opt.account];
+                          return (
+                            <div key={key} className="register__proof-block">
+                              <div className="register__proof-block__header">
+                                <span className="register__proof-block__title">{opt.label}</span>
+                                <span className="register__proof-block__amount">{opt.display}</span>
+                              </div>
+                              <div className="register__proof-block__bank">
+                                Pay to: <strong>{acct.name}</strong> · Acc: <strong>{acct.number}</strong> · <strong>{acct.bank}</strong>
+                              </div>
+                              <div className="register__field" style={{ marginTop: 10 }}>
+                                <label>Payment Reference <span className="register__optional">(Optional)</span></label>
+                                <input type="text" placeholder="e.g. TXN-2026-XXXXXX"
+                                  value={paymentRefs[key] || ""}
+                                  onChange={(e) => handleRefChange(key, e.target.value)} />
+                              </div>
+                              <div className="register__field" style={{ marginTop: 8 }}>
+                                <label>Upload Proof <span className="register__optional">(Optional)</span></label>
+                                <div className="register__file-wrap">
+                                  <label htmlFor={`proof_${key}`} className="register__file-label">
+                                    {paymentProofs[key] ? paymentProofs[key].name : "Choose file (PDF / Image)"}
+                                  </label>
+                                  <input id={`proof_${key}`} type="file"
+                                    accept=".pdf,.jpg,.jpeg,.png"
+                                    onChange={(e) => handleProofChange(key, e.target.files[0])}
+                                    className="register__file-input" />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                    </div>
+                    )}
 
-                    <div className="register__field">
+                    <div className="register__field" style={{ marginTop: 16 }}>
                       <label htmlFor="special_requirements">
                         Special Requirements <span className="register__optional">(Optional)</span>
                       </label>
                       <textarea id="special_requirements" name="special_requirements"
                         placeholder="Dietary, accessibility, or other requirements…"
-                        rows={4} value={formData.special_requirements} onChange={handleChange} />
+                        rows={3} value={formData.special_requirements} onChange={handleChange} />
                     </div>
                   </>
                 )}
@@ -457,14 +467,10 @@ export default function RegisterForm() {
                 {/* Navigation */}
                 <div className="register__nav">
                   {step > 0 && (
-                    <button type="button" className="register__btn register__btn--outline" onClick={prev}>
-                      ← Back
-                    </button>
+                    <button type="button" className="register__btn register__btn--outline" onClick={prev}>← Back</button>
                   )}
                   {step < STEPS.length - 1 ? (
-                    <button type="button" className="register__btn" onClick={next}>
-                      Continue →
-                    </button>
+                    <button type="button" className="register__btn" onClick={next}>Continue →</button>
                   ) : (
                     <button type="submit" className="register__btn" disabled={loading}>
                       {loading ? <span className="register__spinner" /> : "Submit Registration"}
