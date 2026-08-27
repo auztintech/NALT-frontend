@@ -137,9 +137,10 @@ export default function RegisterForm() {
         if (paymentRefs[key]) payload.append(`ref_${key}`, paymentRefs[key]);
         if (paymentProofs[key]) payload.append(`proof_${key}`, paymentProofs[key]);
       });
-      await axios.post(endpoints.registration.create, payload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      // await axios.post(endpoints.registration.create, payload, {
+      //   headers: { "Content-Type": "multipart/form-data" },
+      // });
+      await axios.post(endpoints.registration.create, payload);
       setSuccess(true);
     } catch (error) {
       console.error(error.response?.data);
