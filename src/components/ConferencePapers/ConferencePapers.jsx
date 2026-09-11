@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { endpoint } from "../../api/endpoints";
-import "./PaperSubmission.css";
+import "./ConferencePapers.css";
 
 const TITLE_CHOICES = [
   "Prof.", "Assoc. Prof.", "Asst. Prof.", "Reader",
@@ -28,7 +28,7 @@ const STEPS = ["Author", "Paper", "Co-Authors", "Declaration"];
 
 const emptyCoAuthor = () => ({ name: "", institution: "", email: "" });
 
-export default function PaperSubmission() {
+export default function ConferencePapers() {
   const endpoints = endpoint();
   const [step, setStep]       = useState(0);
   const [loading, setLoading] = useState(false);
