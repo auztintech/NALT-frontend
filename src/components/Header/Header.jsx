@@ -20,9 +20,9 @@ const navLinks = [
         sub: "Sessions, keynotes & workshops",
       },
       {
-        to: "/articles",
-        label: "Download Resources",
-        sub: "Papers, abstracts & materials",
+        to: "/papers",
+        label: "Conference Institutional Papers",
+        sub: "Conference Papers",
       },
     ],
   },
