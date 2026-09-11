@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import MembershipFees from "./pages/Membership/MembershipFees";
 import Venue from "./pages/Venue/Venue";
 import Hotels from "./pages/Hotels/Hotels";
+import Papers from "./pages/Papers/Papers";
 
 
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/membership/fees" element={<MembershipFees />} />
           <Route path="/logistics/venue" element={<Venue />} />
           <Route path="/logistics/hotels" element={<Hotels />} />
+          <Route path="/papers" element={<Papers />} />
 
         </Routes>
       </BrowserRouter>
