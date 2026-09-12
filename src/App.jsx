@@ -15,6 +15,7 @@ import MembershipFees from "./pages/Membership/MembershipFees";
 import Venue from "./pages/Venue/Venue";
 import Hotels from "./pages/Hotels/Hotels";
 import Papers from "./pages/Papers/Papers";
+import ScrollToTop from "./components/ScrollTop/ScrollTop";
 
 
 
@@ -22,6 +23,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop>
         <ToastContainer position="top-right" autoClose={3000} theme="colored" />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -39,6 +41,7 @@ function App() {
           <Route path="/papers" element={<Papers />} />
 
         </Routes>
+        </ScrollToTop>
       </BrowserRouter>
     </>
   );
