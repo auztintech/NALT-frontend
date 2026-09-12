@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <ScrollToTop>
+        <ScrollToTop />
         <ToastContainer position="top-right" autoClose={3000} theme="colored" />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -41,7 +41,7 @@ function App() {
           <Route path="/papers" element={<Papers />} />
 
         </Routes>
-        </ScrollToTop>
+       
       </BrowserRouter>
     </>
   );
