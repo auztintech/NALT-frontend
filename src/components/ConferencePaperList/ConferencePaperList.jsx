@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { endpoint } from "../../api/endpoints";
-import "./ConferencePapers.css";
+import "./ConferencePaperList.css";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "";
@@ -120,7 +120,7 @@ const PaperCard = ({ paper, onReadMore }) => {
   );
 };
 
-const ConferencePapers = () => {
+const ConferencePaperList = () => {
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -208,4 +208,4 @@ const ConferencePapers = () => {
   );
 };
 
-export default ConferencePapers;
+export default ConferencePaperList;
