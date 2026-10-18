@@ -17,6 +17,7 @@ export const endpoint = () => {
     // NEW — was missing, and PaperSubmission.jsx calls endpoints.paper.create
     paper: {
       create: `${apiUrl}/api/papers/`,
+      list: `${apiUrl}/api/papers/list/`,
     },
   };
 };
