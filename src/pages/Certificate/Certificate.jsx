@@ -1,76 +1,135 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { endpoint } from "../../api/endpoints";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import "./Certificate.css";
 
-const CertificateCard = ({ name, institution, type, onDownload }) => (
-  <div className="cert-wrapper" id={type === "institutional" ? "cert-institutional" : "cert-personal"}>
-    <div className="cert-document">
-      {/* Corner decorations */}
-      <div className="cert-corner cert-corner--tl" />
-      <div className="cert-corner cert-corner--tr" />
-      <div className="cert-corner cert-corner--bl" />
-      <div className="cert-corner cert-corner--br" />
+// Path to the NALT logo. Put a transparent-background PNG at: public/nalt-logo.png
+// (or change this string to wherever your logo lives in /public).
+const LOGO_SRC = "/nalt-logo.png";
 
-      {/* Gold border frame */}
-      <div className="cert-frame">
-        {/* Badge */}
-        <div className="cert-badge">
-          <div className="cert-badge-inner">★</div>
-        </div>
+// Signatories, in display order: Secretary (left), President (centre), Chairman (right).
+// `sign` is rendered in cursive as the "signature"; `name` + `role` are printed below.
+const SIGNATORIES = [
+  {
+    sign: "Esa O. Onoja",
+    name: "Dr. Esa O. Onoja",
+    role: "General Secretary, NALT",
+  },
+  {
+    sign: "John A. Akintayo",
+    name: "Prof. John A. Akintayo",
+    role: "President, NALT",
+  },
+  {
+    sign: "Bright Bazuaye",
+    name: "Prof. Bright Bazuaye",
+    role: "Chairman, Local Organising Committee",
+  },
+];
 
-        <p className="cert-heading">CERTIFICATE</p>
-        <p className="cert-subheading">OF PARTICIPATION</p>
+// Prefix a courtesy title (Dr./Prof./Mr.) only when the name doesn't already carry one.
+const TITLE_RE = /^(prof|professor|dr|mr|mrs|ms|miss|barr|chief|engr|sir|hon|rev)\b/i;
+const withTitle = (name, title) => {
+  const n = (name || "").trim();
+  if (!n) return "";
+  if (!title) return n;
+  return TITLE_RE.test(n) ? n : `${title.trim()} ${n}`;
+};
 
-        <div className="cert-divider" />
+const CertificateCard = ({ recipient, institution, type, onDownload }) => {
+  const isInstitutional = type === "institutional";
+  return (
+    <div
+      className="cert-wrapper"
+      id={isInstitutional ? "cert-institutional" : "cert-personal"}
+    >
+      <div className="cert-document">
+        {/* Logo watermark */}
+        <div
+          className="cert-watermark"
+          style={{ backgroundImage: `url(${LOGO_SRC})` }}
+        />
 
-        <p className="cert-presented">This certificate is proudly presented to</p>
+        {/* Corner ornaments */}
+        <span className="cert-orn cert-orn--tl" />
+        <span className="cert-orn cert-orn--tr" />
+        <span className="cert-orn cert-orn--bl" />
+        <span className="cert-orn cert-orn--br" />
 
-        <p className="cert-name">{name}</p>
-
-        <div className="cert-name-rule" />
-
-        <p className="cert-body">
-          {type === "institutional"
-            ? <>For the institutional participation of <strong>{institution}</strong> in the</>
-            : <>For participating in the</>
-          }
-          <br />
-          <strong>57th Annual Conference of the Nigerian Association of Law Teachers (NALT)</strong>
-          <br />
-          held at the Faculty of Law, University of Benin, Benin City
-          <br />
-          18th – 22nd October, 2026.
-        </p>
-
-        <div className="cert-sig-row">
-          <div className="cert-sig-block">
-            <div className="cert-sig-line" />
-            <p className="cert-sig-name">Prof. Abiodun Odutola</p>
-            <p className="cert-sig-role">Chairman, Local Organising Committee</p>
+        <div className="cert-frame">
+          <div className="cert-seal">
+            <span className="cert-seal-top">NALT</span>
+            <span className="cert-seal-star">★</span>
+            <span className="cert-seal-bottom">EST. NIGERIA</span>
           </div>
-          <div className="cert-sig-block">
-            <div className="cert-sig-line" />
-            <p className="cert-sig-name">Prof. Taiwo Osipitan SAN</p>
-            <p className="cert-sig-role">President, NALT</p>
+
+          <p className="cert-heading">Certificate</p>
+          <p className="cert-subheading">of&nbsp;&nbsp;Participation</p>
+
+          <span className="cert-divider" />
+
+          <p className="cert-presented">This certificate is proudly presented to</p>
+
+          <p className="cert-name">{recipient}</p>
+          <span className="cert-name-rule" />
+
+          <p className="cert-body">
+            {isInstitutional ? (
+              <>
+                In recognition of the institutional participation of{" "}
+                <strong>{institution}</strong> in the
+              </>
+            ) : (
+              <>In recognition of active participation in the</>
+            )}
+            <br />
+            <strong>
+              57th Annual Conference of the Nigerian Association of Law Teachers
+              (NALT)
+            </strong>
+            <br />
+            held at the Faculty of Law, University of Benin, Benin City,
+            <br />
+            18th&nbsp;–&nbsp;22nd October,&nbsp;2026.
+          </p>
+
+          <p className="cert-given">
+            Given at Benin City on the 22nd day of October, 2026.
+          </p>
+
+          <div className="cert-sign-row">
+            {SIGNATORIES.map((s) => (
+              <div className="cert-sign" key={s.name}>
+                <span className="cert-sign-script">{s.sign}</span>
+                <span className="cert-sign-line" />
+                <span className="cert-sign-name">{s.name}</span>
+                <span className="cert-sign-role">{s.role}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
 
-    <button className="cert-download-btn" onClick={() => onDownload(type)}>
-      ↓ Download {type === "institutional" ? "Institutional" : "Personal"} Certificate
-    </button>
-  </div>
-);
+      <button className="cert-download-btn" onClick={() => onDownload(type)}>
+        Download {isInstitutional ? "Institutional" : "Personal"} Certificate
+      </button>
+    </div>
+  );
+};
 
 const Certificate = () => {
   const [email, setEmail] = useState("");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Warm the logo into the browser cache so it's ready when the print window opens.
+  useEffect(() => {
+    const img = new Image();
+    img.src = LOGO_SRC;
+  }, []);
 
   const handleFetch = async (e) => {
     e.preventDefault();
@@ -93,28 +152,77 @@ const Certificate = () => {
 
   const handleDownload = (type) => {
     const id = type === "institutional" ? "cert-institutional" : "cert-personal";
-    const el = document.getElementById(id);
-    if (!el) return;
-    // Use browser print for clean PDF
-    const win = window.open("", "_blank");
+    const wrapper = document.getElementById(id);
+    const doc = wrapper?.querySelector(".cert-document");
+    if (!doc) return;
+
+    // Copy every stylesheet and <style> from the current page into the print
+    // window, by reading their real hrefs — so the hashed Vite CSS resolves
+    // correctly instead of a hardcoded (and non-existent) /assets/index.css.
+    const styleTags = [
+      ...document.querySelectorAll('link[rel="stylesheet"], style'),
+    ]
+      .map((node) => node.outerHTML)
+      .join("\n");
+
+    const title = `NALT Certificate${
+      data?.full_name ? " - " + data.full_name : ""
+    }`;
+
+    const win = window.open("", "_blank", "width=1200,height=850");
+    if (!win) {
+      setError(
+        "Your browser blocked the download window. Please allow pop-ups for this site and try again."
+      );
+      return;
+    }
+
     win.document.write(`
+      <!DOCTYPE html>
       <html>
         <head>
-          <title>Certificate</title>
+          <meta charset="utf-8" />
+          <title>${title}</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+          ${styleTags}
           <style>
-            @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap');
-            body { margin: 0; padding: 0; }
-            ${document.querySelector("style") ? document.querySelector("style").innerHTML : ""}
+            @page { size: A4 landscape; margin: 0; }
+            html, body { margin: 0; padding: 0; background: #ffffff; }
+            .print-stage {
+              width: 297mm; height: 210mm;
+              display: flex; align-items: center; justify-content: center;
+              box-sizing: border-box; padding: 8mm;
+            }
+            .print-stage .cert-document {
+              width: 100%; max-width: none; box-shadow: none;
+            }
+            /* Make gold, navy and the watermark actually print */
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
           </style>
-          <link rel="stylesheet" href="${window.location.origin}/assets/index.css" />
         </head>
-        <body onload="window.print();window.close();">
-          ${el.querySelector(".cert-document").outerHTML}
+        <body>
+          <div class="print-stage">${doc.outerHTML}</div>
         </body>
       </html>
     `);
     win.document.close();
+    win.focus();
+
+    const go = () => {
+      win.print();
+      win.close();
+    };
+    // Wait for fonts (and give the watermark a beat) before printing.
+    if (win.document.fonts && win.document.fonts.ready) {
+      win.document.fonts.ready.then(() => setTimeout(go, 400));
+    } else {
+      setTimeout(go, 900);
+    }
   };
+
+  const recipientName = withTitle(data?.full_name, data?.title);
 
   return (
     <>
@@ -122,9 +230,12 @@ const Certificate = () => {
       <div className="cert-hero">
         <div className="cert-hero-inner">
           <p className="cert-hero-eyebrow">57th NALT Annual Conference · 2026</p>
-          <h1 className="cert-hero-title">Download Your <em>Certificate</em></h1>
+          <h1 className="cert-hero-title">
+            Download Your <em>Certificate</em>
+          </h1>
           <p className="cert-hero-sub">
-            Enter your registration email address to access and download your certificate of participation.
+            Enter the email address you used during registration to retrieve and
+            download your certificate of participation.
           </p>
         </div>
         <div className="cert-hero-rule" />
@@ -150,18 +261,18 @@ const Certificate = () => {
         {data && (
           <div className="cert-results">
             <p className="cert-found">
-              Found registration for <strong>{data.full_name}</strong>
+              Registration found for <strong>{recipientName}</strong>
             </p>
             <div className="cert-cards">
               <CertificateCard
-                name={data.full_name}
+                recipient={recipientName}
                 institution={data.institution}
                 type="personal"
                 onDownload={handleDownload}
               />
               {data.has_institutional && (
                 <CertificateCard
-                  name={data.institution}
+                  recipient={data.institution}
                   institution={data.institution}
                   type="institutional"
                   onDownload={handleDownload}
