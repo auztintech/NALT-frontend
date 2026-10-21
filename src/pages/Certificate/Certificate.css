@@ -109,8 +109,9 @@
 
 /* Logo at top (real NALT seal; multiply hides its white background) */
 .cert-logo {
-  width: clamp(48px, 8vw, 76px); height: auto; object-fit: contain;
-  mix-blend-mode: multiply; margin-bottom: clamp(3px, 0.9vh, 9px);
+  width: clamp(78px, 13vw, 128px); height: auto; object-fit: contain;
+  mix-blend-mode: multiply; margin-bottom: clamp(4px, 1vh, 12px);
+  filter: contrast(1.35) saturate(1.05);
 }
 
 /* Headings */
