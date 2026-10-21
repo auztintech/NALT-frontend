@@ -5,12 +5,13 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import "./Certificate.css";
 
-// Path to the NALT logo. Put a transparent-background PNG at: public/nalt-logo.png
-// (or change this string to wherever your logo lives in /public).
+// Path to the NALT logo. Save the association's logo (ideally a PNG) at:
+//   public/nalt-logo.png
+// A white background is fine — it's blended out with mix-blend-mode in the CSS.
 const LOGO_SRC = "/nalt-logo.png";
 
 // Signatories, in display order: Secretary (left), President (centre), Chairman (right).
-// `sign` is rendered in cursive as the "signature"; `name` + `role` are printed below.
+// `sign` renders in cursive as the "signature"; `name` + `role` are printed below.
 const SIGNATORIES = [
   {
     sign: "Esa O. Onoja",
@@ -29,13 +30,14 @@ const SIGNATORIES = [
   },
 ];
 
-// Prefix a courtesy title (Dr./Prof./Mr.) only when the name doesn't already carry one.
-const TITLE_RE = /^(prof|professor|dr|mr|mrs|ms|miss|barr|chief|engr|sir|hon|rev)\b/i;
-const withTitle = (name, title) => {
+// Recipient name with their title in brackets after it, e.g. "Jane Doe (Prof.)".
+// Brackets are omitted when the title is empty or "Other".
+const formatRecipient = (name, title) => {
   const n = (name || "").trim();
   if (!n) return "";
-  if (!title) return n;
-  return TITLE_RE.test(n) ? n : `${title.trim()} ${n}`;
+  const t = (title || "").trim();
+  if (!t || t.toLowerCase() === "other") return n;
+  return `${n} (${t})`;
 };
 
 const CertificateCard = ({ recipient, institution, type, onDownload }) => {
@@ -59,11 +61,7 @@ const CertificateCard = ({ recipient, institution, type, onDownload }) => {
         <span className="cert-orn cert-orn--br" />
 
         <div className="cert-frame">
-          <div className="cert-seal">
-            <span className="cert-seal-top">NALT</span>
-            <span className="cert-seal-star">★</span>
-            <span className="cert-seal-bottom">EST. NIGERIA</span>
-          </div>
+          <img className="cert-logo" src={LOGO_SRC} alt="NALT logo" />
 
           <p className="cert-heading">Certificate</p>
           <p className="cert-subheading">of&nbsp;&nbsp;Participation</p>
@@ -125,7 +123,7 @@ const Certificate = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Warm the logo into the browser cache so it's ready when the print window opens.
+  // Warm the logo into cache so it's ready when the print window opens.
   useEffect(() => {
     const img = new Image();
     img.src = LOGO_SRC;
@@ -222,7 +220,7 @@ const Certificate = () => {
     }
   };
 
-  const recipientName = withTitle(data?.full_name, data?.title);
+  const recipientName = formatRecipient(data?.full_name, data?.title);
 
   return (
     <>
