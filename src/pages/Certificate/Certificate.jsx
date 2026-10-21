@@ -13,21 +13,23 @@ const LOGO_SRC = "/NALT.jpg";
 // Signatories, in display order: Secretary (left), President (centre), Chairman (right).
 // `sign` renders in cursive as the "signature"; `name` + `role` are printed below.
 const SIGNATORIES = [
+    {
+    sign: "John A. Akintayo",
+    name: "Prof. John A. Akintayo",
+    role: "President, NALT",
+  },
   {
     sign: "Esa O. Onoja",
     name: "Dr. Esa O. Onoja",
     role: "General Secretary, NALT",
   },
   {
-    sign: "John A. Akintayo",
-    name: "Prof. John A. Akintayo",
-    role: "President, NALT",
-  },
-  {
     sign: "Bright Bazuaye",
     name: "Prof. Bright Bazuaye",
     role: "Chairman, Local Organising Committee",
   },
+  
+  
 ];
 
 // Recipient name with their title in brackets after it, e.g. "Jane Doe (Prof.)".
