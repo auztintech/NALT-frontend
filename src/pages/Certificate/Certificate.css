@@ -190,8 +190,31 @@
 .cert-document, .cert-frame, .cert-logo, .cert-watermark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
 @media (max-width: 640px) {
-  .cert-sign-row { flex-wrap: wrap; gap: 20px; }
-  .cert-sign { flex: 1 1 40%; }
   .cert-form { flex-direction: column; }
-  .cert-orn { width: 40px; height: 40px; }
+
+  /* On phones, let the on-screen certificate grow to fit its text instead of
+     being forced into the fixed landscape shape (which clips the content).
+     Scoped to .cert-cards so the off-screen download clone is unaffected. */
+  .cert-cards .cert-document {
+    aspect-ratio: auto; height: auto; overflow: visible;
+  }
+  .cert-cards .cert-frame {
+    position: relative; inset: auto; margin: 16px;
+    padding: 30px 18px; justify-content: flex-start;
+  }
+  .cert-cards .cert-orn { width: 30px; height: 30px; }
+  .cert-cards .cert-orn--tl { top: 8px; left: 8px; }
+  .cert-cards .cert-orn--tr { top: 8px; right: 8px; }
+  .cert-cards .cert-orn--bl { bottom: 8px; left: 8px; }
+  .cert-cards .cert-orn--br { bottom: 8px; right: 8px; }
+
+  .cert-cards .cert-name { font-size: clamp(30px, 10vw, 46px); }
+  .cert-cards .cert-body { font-size: 12px; max-width: 100%; }
+  .cert-cards .cert-given { font-size: 11px; }
+
+  .cert-cards .cert-sign-row { flex-wrap: wrap; gap: 20px; }
+  .cert-cards .cert-sign { flex: 1 1 40%; }
+  .cert-cards .cert-sign-script { font-size: 24px; }
+  .cert-cards .cert-sign-name { font-size: 10px; }
+  .cert-cards .cert-sign-role { font-size: 9px; }
 }

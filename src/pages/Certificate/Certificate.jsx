@@ -1,38 +1,31 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 import { endpoint } from "../../api/endpoints";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import "./Certificate.css";
 
-// Path to the NALT logo. Save the association's logo (ideally a PNG) at:
-//   public/nalt-logo.png
-// A white background is fine — it's blended out with mix-blend-mode in the CSS.
+// Path to the NALT logo. Save the association's logo at: public/nalt-logo.png
+// A white background is fine — it's blended out on screen, and removed in code
+// before the PDF is generated.
 const LOGO_SRC = "/NALT.jpg";
 
+// Size the downloaded certificate at A4 landscape (96dpi) so it's always crisp,
+// regardless of the screen it was triggered from.
+const PRINT_W = 1123;
+const PRINT_H = 794;
+
 // Signatories, in display order: Secretary (left), President (centre), Chairman (right).
-// `sign` renders in cursive as the "signature"; `name` + `role` are printed below.
 const SIGNATORIES = [
-  {
-    sign: "Esa O. Onoja",
-    name: "Dr. Esa O. Onoja",
-    role: "General Secretary, NALT",
-  },
-  {
-    sign: "John A. Akintayo",
-    name: "Prof. John A. Akintayo",
-    role: "President, NALT",
-  },
-  {
-    sign: "Bright Bazuaye",
-    name: "Prof. Bright Bazuaye",
-    role: "Chairman, Local Organising Committee",
-  },
+  { sign: "Esa O. Onoja", name: "Dr. Esa O. Onoja", role: "General Secretary, NALT" },
+  { sign: "John A. Akintayo", name: "Prof. John A. Akintayo", role: "President, NALT" },
+  { sign: "Bright Bazuaye", name: "Prof. Bright Bazuaye", role: "Chairman, Local Organising Committee" },
 ];
 
-// Recipient name in Title Case (first letter of each word capitalised) with the
-// title in brackets after it, e.g. "John Oluwatomisin Akinselure (Prof.)".
-// Brackets are omitted when the title is empty or "Other".
+// Recipient name in Title Case with the title in brackets after it,
+// e.g. "John Oluwatomisin Akinselure (Prof.)". Brackets omitted for empty/"Other".
 const toTitleCase = (str) =>
   str.replace(/\S+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
 
@@ -45,21 +38,44 @@ const formatRecipient = (name, title) => {
   return `${display} (${t})`;
 };
 
-const CertificateCard = ({ recipient, institution, type, onDownload }) => {
+// Load an image and resolve once it's ready.
+const loadImage = (src) =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+
+// Turn the logo's white background transparent (same-origin file, so the canvas
+// stays untainted). Falls back to the original URL if anything goes wrong.
+const transparentLogo = async (src) => {
+  try {
+    const img = await loadImage(src);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const px = data.data;
+    for (let i = 0; i < px.length; i += 4) {
+      if (px[i] > 235 && px[i + 1] > 235 && px[i + 2] > 235) px[i + 3] = 0;
+    }
+    ctx.putImageData(data, 0, 0);
+    return canvas.toDataURL("image/png");
+  } catch {
+    return src;
+  }
+};
+
+const CertificateCard = ({ recipient, institution, type, busy, onDownload }) => {
   const isInstitutional = type === "institutional";
   return (
-    <div
-      className="cert-wrapper"
-      id={isInstitutional ? "cert-institutional" : "cert-personal"}
-    >
+    <div className="cert-wrapper" id={isInstitutional ? "cert-institutional" : "cert-personal"}>
       <div className="cert-document">
-        {/* Logo watermark */}
-        <div
-          className="cert-watermark"
-          style={{ backgroundImage: `url(${LOGO_SRC})` }}
-        />
+        <div className="cert-watermark" style={{ backgroundImage: `url(${LOGO_SRC})` }} />
 
-        {/* Corner ornaments */}
         <span className="cert-orn cert-orn--tl" />
         <span className="cert-orn cert-orn--tr" />
         <span className="cert-orn cert-orn--bl" />
@@ -89,8 +105,7 @@ const CertificateCard = ({ recipient, institution, type, onDownload }) => {
             )}
             <br />
             <strong>
-              57th Annual Conference of the Nigerian Association of Law Teachers
-              (NALT)
+              57th Annual Conference of the Nigerian Association of Law Teachers (NALT)
             </strong>
             <br />
             held at the Faculty of Law, University of Benin, Benin City,
@@ -98,9 +113,7 @@ const CertificateCard = ({ recipient, institution, type, onDownload }) => {
             18th&nbsp;–&nbsp;22nd October,&nbsp;2026.
           </p>
 
-          <p className="cert-given">
-            Given at Benin City on the 22nd day of October, 2026.
-          </p>
+          <p className="cert-given">Given at Benin City on the 22nd day of October, 2026.</p>
 
           <div className="cert-sign-row">
             {SIGNATORIES.map((s) => (
@@ -115,8 +128,10 @@ const CertificateCard = ({ recipient, institution, type, onDownload }) => {
         </div>
       </div>
 
-      <button className="cert-download-btn" onClick={() => onDownload(type)}>
-        Download {isInstitutional ? "Institutional" : "Personal"} Certificate
+      <button className="cert-download-btn" onClick={() => onDownload(type)} disabled={busy}>
+        {busy
+          ? "Preparing…"
+          : `Download ${isInstitutional ? "Institutional" : "Personal"} Certificate`}
       </button>
     </div>
   );
@@ -127,8 +142,8 @@ const Certificate = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [downloading, setDownloading] = useState(null); // which card is being generated
 
-  // Warm the logo into cache so it's ready when the print window opens.
   useEffect(() => {
     const img = new Image();
     img.src = LOGO_SRC;
@@ -145,83 +160,77 @@ const Certificate = () => {
       });
       setData(res.data);
     } catch (err) {
-      setError(
-        err.response?.data?.error || "Something went wrong. Please try again."
-      );
+      setError(err.response?.data?.error || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDownload = (type) => {
+  const handleDownload = async (type) => {
     const id = type === "institutional" ? "cert-institutional" : "cert-personal";
-    const wrapper = document.getElementById(id);
-    const doc = wrapper?.querySelector(".cert-document");
-    if (!doc) return;
+    const source = document.getElementById(id)?.querySelector(".cert-document");
+    if (!source) return;
 
-    // Copy every stylesheet and <style> from the current page into the print
-    // window, by reading their real hrefs — so the hashed Vite CSS resolves
-    // correctly instead of a hardcoded (and non-existent) /assets/index.css.
-    const styleTags = [
-      ...document.querySelectorAll('link[rel="stylesheet"], style'),
-    ]
-      .map((node) => node.outerHTML)
-      .join("\n");
+    setDownloading(type);
+    setError("");
 
-    const title = `NALT Certificate${
-      data?.full_name ? " - " + data.full_name : ""
-    }`;
+    // Build an off-screen, full-size copy so the PDF is always A4-landscape and
+    // crisp — independent of the phone/desktop the download came from.
+    const holder = document.createElement("div");
+    holder.style.cssText = `position:fixed;left:-99999px;top:0;width:${PRINT_W}px;z-index:-1;`;
+    const clone = source.cloneNode(true);
+    clone.style.width = `${PRINT_W}px`;
+    clone.style.height = `${PRINT_H}px`;
+    clone.style.maxWidth = "none";
+    clone.style.aspectRatio = "auto";
 
-    const win = window.open("", "_blank", "width=1200,height=850");
-    if (!win) {
-      setError(
-        "Your browser blocked the download window. Please allow pop-ups for this site and try again."
-      );
-      return;
-    }
+    holder.appendChild(clone);
+    document.body.appendChild(holder);
 
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <title>${title}</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-          <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-          ${styleTags}
-          <style>
-            @page { size: A4 landscape; margin: 0; }
-            html, body { margin: 0; padding: 0; background: #ffffff; }
-            .print-stage {
-              width: 297mm; height: 210mm;
-              display: flex; align-items: center; justify-content: center;
-              box-sizing: border-box; padding: 8mm;
-            }
-            .print-stage .cert-document {
-              width: 100%; max-width: none; box-shadow: none;
-            }
-            /* Make gold, navy and the watermark actually print */
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-          </style>
-        </head>
-        <body>
-          <div class="print-stage">${doc.outerHTML}</div>
-        </body>
-      </html>
-    `);
-    win.document.close();
-    win.focus();
+    try {
+      await (document.fonts ? document.fonts.ready : Promise.resolve());
 
-    const go = () => {
-      win.print();
-      win.close();
-    };
-    // Wait for fonts (and give the watermark a beat) before printing.
-    if (win.document.fonts && win.document.fonts.ready) {
-      win.document.fonts.ready.then(() => setTimeout(go, 400));
-    } else {
-      setTimeout(go, 900);
+      // Replace the white-background logo with a transparent version so the PDF
+      // has no white boxes (html2canvas can't do mix-blend-mode).
+      const logoUrl = await transparentLogo(LOGO_SRC);
+      const cloneLogo = clone.querySelector(".cert-logo");
+      if (cloneLogo) {
+        cloneLogo.src = logoUrl;
+        cloneLogo.style.mixBlendMode = "normal";
+        cloneLogo.style.filter = "none";
+      }
+      const cloneWm = clone.querySelector(".cert-watermark");
+      if (cloneWm) {
+        cloneWm.style.backgroundImage = `url(${logoUrl})`;
+        cloneWm.style.mixBlendMode = "normal";
+      }
+
+      await new Promise((r) => setTimeout(r, 150)); // let the swapped image paint
+
+      const canvas = await html2canvas(clone, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+        width: PRINT_W,
+        height: PRINT_H,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+        hotfixes: ["px_scaling"],
+      });
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+
+      const who = data?.full_name ? ` - ${toTitleCase(data.full_name)}` : "";
+      pdf.save(`NALT Certificate${who}.pdf`);
+    } catch (err) {
+      setError("Could not generate the certificate. Please try again.");
+    } finally {
+      document.body.removeChild(holder);
+      setDownloading(null);
     }
   };
 
@@ -271,6 +280,7 @@ const Certificate = () => {
                 recipient={recipientName}
                 institution={data.institution}
                 type="personal"
+                busy={downloading === "personal"}
                 onDownload={handleDownload}
               />
               {data.has_institutional && (
@@ -278,6 +288,7 @@ const Certificate = () => {
                   recipient={data.institution}
                   institution={data.institution}
                   type="institutional"
+                  busy={downloading === "institutional"}
                   onDownload={handleDownload}
                 />
               )}
