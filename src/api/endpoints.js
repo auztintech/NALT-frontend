@@ -5,7 +5,7 @@ export const endpoint = () => {
     registration: {
       create: `${apiUrl}/api/register/`,
       update: (id) => `${apiUrl}/api/register/${id}/`,
-      certificate: `${apiUrl}/api/register/certificate/`,
+      certificate: `${apiUrl}/api/certificate/`,
     },
     article: {
       list: `${apiUrl}/api/articles/`,
