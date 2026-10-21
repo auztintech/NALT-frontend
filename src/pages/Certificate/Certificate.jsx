@@ -13,33 +13,36 @@ const LOGO_SRC = "/NALT.jpg";
 // Signatories, in display order: Secretary (left), President (centre), Chairman (right).
 // `sign` renders in cursive as the "signature"; `name` + `role` are printed below.
 const SIGNATORIES = [
-    {
-    sign: "John A. Akintayo",
-    name: "Prof. John A. Akintayo",
-    role: "President, NALT",
-  },
   {
     sign: "Esa O. Onoja",
     name: "Dr. Esa O. Onoja",
     role: "General Secretary, NALT",
   },
   {
+    sign: "John A. Akintayo",
+    name: "Prof. John A. Akintayo",
+    role: "President, NALT",
+  },
+  {
     sign: "Bright Bazuaye",
     name: "Prof. Bright Bazuaye",
     role: "Chairman, Local Organising Committee",
   },
-  
-  
 ];
 
-// Recipient name with their title in brackets after it, e.g. "Jane Doe (Prof.)".
+// Recipient name in Title Case (first letter of each word capitalised) with the
+// title in brackets after it, e.g. "John Oluwatomisin Akinselure (Prof.)".
 // Brackets are omitted when the title is empty or "Other".
+const toTitleCase = (str) =>
+  str.replace(/\S+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+
 const formatRecipient = (name, title) => {
   const n = (name || "").trim();
   if (!n) return "";
+  const display = toTitleCase(n);
   const t = (title || "").trim();
-  if (!t || t.toLowerCase() === "other") return n;
-  return `${n} (${t})`;
+  if (!t || t.toLowerCase() === "other") return display;
+  return `${display} (${t})`;
 };
 
 const CertificateCard = ({ recipient, institution, type, onDownload }) => {
