@@ -8,7 +8,7 @@ import "./Certificate.css";
 // Path to the NALT logo. Save the association's logo (ideally a PNG) at:
 //   public/nalt-logo.png
 // A white background is fine — it's blended out with mix-blend-mode in the CSS.
-const LOGO_SRC = "/nalt-logo.png";
+const LOGO_SRC = "/NALT.jpg";
 
 // Signatories, in display order: Secretary (left), President (centre), Chairman (right).
 // `sign` renders in cursive as the "signature"; `name` + `role` are printed below.
