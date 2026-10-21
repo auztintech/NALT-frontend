@@ -189,6 +189,24 @@
 /* Screen-only: keep certificate colours crisp */
 .cert-document, .cert-frame, .cert-logo, .cert-watermark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
+/* Fixed sizes for the downloaded certificate — the on-screen version uses vw/vh
+   units that collapse when a PDF is generated from a phone, so the clone gets
+   these device-independent sizes instead. */
+.cert-print .cert-logo { width: 118px; margin-bottom: 12px; }
+.cert-print .cert-heading { font-size: 46px; letter-spacing: 10px; }
+.cert-print .cert-subheading { font-size: 14px; letter-spacing: 7px; }
+.cert-print .cert-divider { width: 130px; margin: 14px 0; }
+.cert-print .cert-divider::after { font-size: 12px; }
+.cert-print .cert-presented { font-size: 15px; margin-bottom: 10px; }
+.cert-print .cert-name { font-size: 52px; }
+.cert-print .cert-name-rule { margin: 8px 0 16px; }
+.cert-print .cert-body { font-size: 14px; margin-bottom: 12px; max-width: 86%; }
+.cert-print .cert-given { font-size: 12px; margin-bottom: 26px; }
+.cert-print .cert-sign-row { gap: 56px; }
+.cert-print .cert-sign-script { font-size: 30px; }
+.cert-print .cert-sign-name { font-size: 11px; letter-spacing: 0.4px; }
+.cert-print .cert-sign-role { font-size: 10px; }
+
 @media (max-width: 640px) {
   .cert-form { flex-direction: column; }
 

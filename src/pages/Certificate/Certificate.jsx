@@ -179,6 +179,7 @@ const Certificate = () => {
     const holder = document.createElement("div");
     holder.style.cssText = `position:fixed;left:-99999px;top:0;width:${PRINT_W}px;z-index:-1;`;
     const clone = source.cloneNode(true);
+    clone.classList.add("cert-print"); // pin sizes so the PDF ignores screen width
     clone.style.width = `${PRINT_W}px`;
     clone.style.height = `${PRINT_H}px`;
     clone.style.maxWidth = "none";
