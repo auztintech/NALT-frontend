@@ -17,6 +17,8 @@ import Hotels from "./pages/Hotels/Hotels";
 import Papers from "./pages/Papers/Papers";
 import ScrollToTop from "./components/ScrollTop/ScrollTop";
 import PaperList from "./pages/PaperList/PaperList";
+import Certificate from "./pages/Certificate/Certificate";
+
 
 
 
@@ -41,6 +43,7 @@ function App() {
           <Route path="/logistics/hotels" element={<Hotels />} />
           <Route path="/papers" element={<Papers />} />
           <Route path="/paperlist" element={<PaperList />} />
+          <Route path="/certificate" element={<Certificate />} />
 
 
         </Routes>

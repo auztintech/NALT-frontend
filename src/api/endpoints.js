@@ -5,6 +5,7 @@ export const endpoint = () => {
     registration: {
       create: `${apiUrl}/api/register/`,
       update: (id) => `${apiUrl}/api/register/${id}/`,
+      certificate: `${apiUrl}/api/register/certificate/`,
     },
     article: {
       list: `${apiUrl}/api/articles/`,
@@ -14,7 +15,6 @@ export const endpoint = () => {
       list: `${apiUrl}/api/announcements/`,
       detail: (slug) => `${apiUrl}/api/announcements/${slug}/`,
     },
-    // NEW — was missing, and PaperSubmission.jsx calls endpoints.paper.create
     paper: {
       create: `${apiUrl}/api/papers/`,
       list: `${apiUrl}/api/papers/list/`,
