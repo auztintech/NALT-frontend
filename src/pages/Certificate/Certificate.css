@@ -56,7 +56,8 @@
 }
 
 /* ── Cards layout ── */
-.cert-cards { display: flex; flex-direction: column; gap: 52px; align-items: center; }
+.cert-cards { display: flex; flex-direction: column; gap: 64px; align-items: center; }
+.cert-group { display: flex; flex-direction: column; align-items: center; gap: 52px; width: 100%; }
 .cert-wrapper { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
 
 /* ── Certificate document ── */

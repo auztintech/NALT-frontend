@@ -70,9 +70,9 @@ const transparentLogo = async (src) => {
 };
 
 const CertificateCard = ({ recipient, institution, type, busy, onDownload }) => {
-  const isInstitutional = type === "institutional";
+  const isInstitutional = type.startsWith("institutional");
   return (
-    <div className="cert-wrapper" id={isInstitutional ? "cert-institutional" : "cert-personal"}>
+    <div className="cert-wrapper" id={`cert-${type}`}>
       <div className="cert-document">
         <div className="cert-watermark" style={{ backgroundImage: `url(${LOGO_SRC})` }} />
 
@@ -128,7 +128,7 @@ const CertificateCard = ({ recipient, institution, type, busy, onDownload }) => 
         </div>
       </div>
 
-      <button className="cert-download-btn" onClick={() => onDownload(type)} disabled={busy}>
+      <button className="cert-download-btn" onClick={() => onDownload(type, recipient)} disabled={busy}>
         {busy
           ? "Preparing…"
           : `Download ${isInstitutional ? "Institutional" : "Personal"} Certificate`}
@@ -166,9 +166,8 @@ const Certificate = () => {
     }
   };
 
-  const handleDownload = async (type) => {
-    const id = type === "institutional" ? "cert-institutional" : "cert-personal";
-    const source = document.getElementById(id)?.querySelector(".cert-document");
+  const handleDownload = async (type, recipientLabel) => {
+    const source = document.getElementById(`cert-${type}`)?.querySelector(".cert-document");
     if (!source) return;
 
     setDownloading(type);
@@ -225,8 +224,8 @@ const Certificate = () => {
       });
       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
 
-      const who = data?.full_name ? ` - ${toTitleCase(data.full_name)}` : "";
-      pdf.save(`NALT Certificate${who}.pdf`);
+      const label = (recipientLabel || data?.full_name || "participant").replace(/\s*\(.*\)\s*$/, "");
+      pdf.save(`NALT Certificate - ${label}.pdf`);
     } catch (err) {
       setError("Could not generate the certificate. Please try again.");
     } finally {
@@ -235,7 +234,10 @@ const Certificate = () => {
     }
   };
 
-  const recipientName = formatRecipient(data?.full_name, data?.title);
+  // Backend returns { registrations: [...] }. Fall back to treating the whole
+  // payload as one registration, for safety if an older response shape arrives.
+  const registrations =
+    data?.registrations && data.registrations.length ? data.registrations : data ? [data] : [];
 
   return (
     <>
@@ -271,28 +273,42 @@ const Certificate = () => {
 
         {error && <p className="cert-error">{error}</p>}
 
-        {data && (
+        {registrations.length > 0 && (
           <div className="cert-results">
             <p className="cert-found">
-              Registration found for <strong>{recipientName}</strong>
+              {registrations.length > 1
+                ? `${registrations.length} registrations found for this email`
+                : (
+                  <>
+                    Registration found for{" "}
+                    <strong>{formatRecipient(registrations[0].full_name, registrations[0].title)}</strong>
+                  </>
+                )}
             </p>
             <div className="cert-cards">
-              <CertificateCard
-                recipient={recipientName}
-                institution={data.institution}
-                type="personal"
-                busy={downloading === "personal"}
-                onDownload={handleDownload}
-              />
-              {data.has_institutional && (
-                <CertificateCard
-                  recipient={data.institution}
-                  institution={data.institution}
-                  type="institutional"
-                  busy={downloading === "institutional"}
-                  onDownload={handleDownload}
-                />
-              )}
+              {registrations.map((reg, i) => {
+                const recipientName = formatRecipient(reg.full_name, reg.title);
+                return (
+                  <div className="cert-group" key={i}>
+                    <CertificateCard
+                      recipient={recipientName}
+                      institution={reg.institution}
+                      type={`personal-${i}`}
+                      busy={downloading === `personal-${i}`}
+                      onDownload={handleDownload}
+                    />
+                    {reg.has_institutional && (
+                      <CertificateCard
+                        recipient={reg.institution}
+                        institution={reg.institution}
+                        type={`institutional-${i}`}
+                        busy={downloading === `institutional-${i}`}
+                        onDownload={handleDownload}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
