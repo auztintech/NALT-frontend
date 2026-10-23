@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { endpoint } from "../../api/endpoints";
 import Header from "../../components/Header/Header";
@@ -80,6 +80,15 @@ const Feedback = () => {
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
 
+  // Scroll back to the top of the form whenever the step changes, so Next/Back
+  // don't leave the user stranded at the bottom of the previous step.
+  const topRef = useRef(null);
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [step]);
+
   const set = (field, val) => setForm(f => ({ ...f, [field]: val }));
   const txt = (field) => (e) => set(field, e.target.value);
 
@@ -88,14 +97,37 @@ const Feedback = () => {
     return true;
   };
 
+  // Fields the backend treats as integers — send null, never "", when blank.
+  const INT_FIELDS = ['previous_conferences'];
+
+  const cleanPayload = (data) => {
+    const out = { ...data };
+    INT_FIELDS.forEach((f) => {
+      if (out[f] === '' || out[f] === undefined) {
+        out[f] = null;
+      } else if (out[f] !== null) {
+        const n = parseInt(out[f], 10);
+        out[f] = Number.isNaN(n) ? null : n;
+      }
+    });
+    return out;
+  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
     setError('');
     try {
-      await axios.post(endpoint().feedback.create, form);
+      await axios.post(endpoint().feedback.create, cleanPayload(form));
       setDone(true);
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      const data = err.response?.data;
+      if (data && typeof data === 'object') {
+        const firstField = Object.keys(data)[0];
+        const firstMsg = Array.isArray(data[firstField]) ? data[firstField][0] : data[firstField];
+        setError(`${firstField}: ${firstMsg}`);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -127,7 +159,7 @@ const Feedback = () => {
         <div className="fb-hero-rule" />
       </div>
 
-      <div className="fb-page">
+      <div className="fb-page" ref={topRef}>
         {/* Progress */}
         <div className="fb-progress">
           {STEPS.map((s, i) => (
@@ -349,11 +381,11 @@ const Feedback = () => {
           {/* Navigation */}
           <div className="fb-nav">
             {step > 0 && (
-              <button className="fb-btn fb-btn--back" onClick={() => setStep(s => s - 1)}>← Back</button>
+              <button className="fb-btn fb-btn--back" onClick={() => setStep(s => s - 1)}>Back</button>
             )}
             {step < STEPS.length - 1 ? (
               <button className="fb-btn fb-btn--next" onClick={() => setStep(s => s + 1)} disabled={!canNext()}>
-                Next →
+                Next
               </button>
             ) : (
               <button className="fb-btn fb-btn--submit" onClick={handleSubmit} disabled={submitting}>
