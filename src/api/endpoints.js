@@ -19,5 +19,8 @@ export const endpoint = () => {
       create: `${apiUrl}/api/papers/`,
       list: `${apiUrl}/api/papers/list/`,
     },
+    feedback: {
+      create: `${apiUrl}/api/feedback/`,
+    },
   };
 };

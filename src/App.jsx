@@ -18,9 +18,7 @@ import Papers from "./pages/Papers/Papers";
 import ScrollToTop from "./components/ScrollTop/ScrollTop";
 import PaperList from "./pages/PaperList/PaperList";
 import Certificate from "./pages/Certificate/Certificate";
-
-
-
+import Feedback from "./pages/Feedback/Feedback";
 
 function App() {
   return (
@@ -44,6 +42,7 @@ function App() {
           <Route path="/papers" element={<Papers />} />
           <Route path="/paperlist" element={<PaperList />} />
           <Route path="/certificate" element={<Certificate />} />
+          <Route path="/feedback" element={<Feedback />} />
 
 
         </Routes>

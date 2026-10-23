@@ -10,9 +10,9 @@ const navLinks = [
     label: "Conference",
     dropdown: [
       {
-        to: "/conference/communique",
-        label: "Communiqué & Resolutions",
-        sub: "2026 General Assembly documents",
+        to: "/paperlist",
+        label: "Institutional Papers",
+        sub: "Papers presented",
       },
       {
         to: "/conference/schedule",
@@ -82,6 +82,7 @@ const navLinks = [
   { to: "/announcements", label: "Announcements" },
   { to: "/articles", label: "Articles" },
   { to: "/contact", label: "Contact" },
+  { to: "/feedback", label: "Feedback" },
 ];
 
 const DropdownMenu = ({ items, onClose }) => (
